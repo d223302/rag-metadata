@@ -9,7 +9,7 @@ import anthropic
 import logging
 from filelock import FileLock
 import lade
-from transformers import AutoTokenizer, AutoModelForCausalLM, set_seed
+from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
 import torch
 from ouroboros import ouroboros
 from ouroboros.models import LlamaForCausalLM
@@ -96,6 +96,77 @@ class VLLMModel(LM):
     
     def apply_chat_template(self, user_prompt):
         raise NotImplementedError("apply_chat_template method must be implemented in derived class")
+
+class TransformerLM(LM):
+    def __init__(self, tensor_parallel_size, **kwargs):
+        super().__init__(**kwargs)
+        self.llm = AutoModelForCausalLM.from_pretrained(self.model_name, device_map = 'auto')
+        self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+        self.tokenizer.use_default_system_prompt = False
+        self.yes_idx = self.tokenizer.encode("Yes", add_special_tokens = False)
+        self.no_idx = self.tokenizer.encode("No", add_special_tokens = False)
+        # print(f"yes: {self.yes_idx}, no: {self.no_idx}")
+        assert len(self.yes_idx) == 1 and len(self.no_idx) == 1, f"Yes/No tokens must be unique, but got {self.yes_idx} and {self.no_idx}"
+        # Check how the space before word is handled
+        if len(self.tokenizer.encode(" Yes", add_special_tokens = False)) != 2:
+            raise ValueError(f"Space before Yes/No is not handled correctly. ' Yes' is tokenized into {self.tokenizer.tokenize(' Yes', add_special_tokens = False)}")
+        self.yes_idx = self.yes_idx[0]
+        self.no_idx = self.no_idx[0]
+        self.generation_params = GenerationConfig(
+            do_sample = False,
+            max_new_tokens = 5,
+            temperature = None,
+            top_p = None,
+        )
+
+        
+    def generate(self, user_prompt):
+        # If the tokenizer has apply_chat_template method, apply it
+
+        if hasattr(self.tokenizer, "apply_chat_template"):
+            dialogue = [
+                {"role": "user", "content": user_prompt},
+            ]
+            prompt = self.tokenizer.apply_chat_template(dialogue, tokenize = False)
+            #print(prompt)
+        prompt = prompt.strip() + " "
+        # print(prompt)
+        if prompt in self.cache_dict:
+            return self.cache_dict[prompt]
+        else:
+            input_tokens = self.tokenizer(prompt, return_tensors = "pt", add_special_tokens = False).input_ids
+            # TODO: Since we only care about the probability of Yes/No, we can use the last token as the output
+
+            with torch.no_grad():
+                output = self.llm(
+                    input_tokens.to(self.llm.device),
+                    #max_new_tokens = 3,
+                )
+            # print(f"Output logits shape: {output.logits.shape}")
+            last_token_logits = output.logits[0, -1, :]
+            # print(f"{Fore.CYAN} {self.tokenizer.convert_ids_to_tokens([last_token_logits.argmax()])} {Style.RESET_ALL} (argmax: {last_token_logits.argmax()})")
+            # print(f"Yes logit: {last_token_logits[self.yes_idx]}, No logit: {last_token_logits[self.no_idx]}")
+            prediction = "Yes" if last_token_logits[self.yes_idx] > last_token_logits[self.no_idx] else "No"
+            # print(f"Prediction based on probability: {prediction}")
+
+            
+            #  # Decode the output
+            #  output = self.llm.generate(
+            #      input_tokens.to(self.llm.device),
+            #      generation_config = self.generation_params,
+            #  )
+            #  output = output[0][len(input_tokens[0]):].detach().cpu().numpy()
+            #  decoded_output = self.tokenizer.decode(output, skip_special_tokens = True)
+            #  generation = decoded_output
+            #  print(f"{Fore.GREEN} {generation} {Style.RESET_ALL} (generation)")
+
+            # Add the prompt to the cache
+            self.cache_dict[prompt] = prediction
+            return prediction
+    
+    def apply_chat_template(self, user_prompt):
+        raise NotImplementedError("apply_chat_template method must be implemented in derived class")
+
 
 class OpenAIModel(LM):
     def __init__(self, openai_api_key, **kwargs):
@@ -251,7 +322,7 @@ def create_llm(model_name, cache_file, sampling_params, **kwargs):
             **kwargs
         )
     else:
-        return VLLMModel(
+        return TransformerLM(
             model_name = model_name, 
             cache_file = cache_file, 
             sampling_params = sampling_params, 
