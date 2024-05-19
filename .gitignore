@@ -1,3 +1,9 @@
 data.pkl
 utils/__pycache__/
 results/
+results_fake/
+trl
+data/fake*
+dpo_output
+.cache/
+
