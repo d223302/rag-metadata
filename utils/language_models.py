@@ -13,7 +13,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
 import torch
 from ouroboros import ouroboros
 from ouroboros.models import LlamaForCausalLM
-
+import signal
 
 logger = logging.getLogger(__name__)
 
@@ -35,18 +35,31 @@ class LM():
         for k, v in self.load_cache().items():
             self.cache_dict[k] = v
 
+        # Temporary file to write cache safely
+        temp_file = self.cache_file + ".temp"
+
+        def handle_interrupt(signum, frame):
+            print("Interrupted, please wait for the cache to save properly!")
+            signal.signal(signal.SIGINT, original_sigint_handler)
+
+        original_sigint_handler = signal.signal(signal.SIGINT, handle_interrupt)
+
         while True:
             try:
-                with FileLock(self.cache_file + ".lock", timeout = 10):
-                    with open(self.cache_file, "wb") as f:
+                with FileLock(self.cache_file + ".lock", timeout=10):
+                    with open(temp_file, "wb") as f:
                         pickle.dump(self.cache_dict, f)
+                    os.replace(temp_file, self.cache_file)
                 break
-            except Exception:
-                print ("Pickle Error: Retry in 5sec...")
+            except Exception as e:
+                print(f"Pickle Error: {e}. Retry in 5sec...")
                 time.sleep(5)
 
+        # Restore original signal handler
+        signal.signal(signal.SIGINT, original_sigint_handler)
 
     def load_cache(self, allow_retry=True):
+        logger.debug(f"Loading cache from {self.cache_file}")
         if os.path.exists(self.cache_file):
             while True:
                 try:
@@ -62,6 +75,10 @@ class LM():
             cache = {}
         return cache
     
+
+    # TODO: Add a function to backup cache
+
+
     def generate(self, user_prompt):
         raise NotImplementedError("generate method must be implemented in derived class")
 
@@ -97,26 +114,66 @@ class VLLMModel(LM):
     def apply_chat_template(self, user_prompt):
         raise NotImplementedError("apply_chat_template method must be implemented in derived class")
 
+
+
+
+# TODO ends
+
 class TransformerLM(LM):
+    token_mapping = {
+        "meta-llama/Meta-Llama-3-8B-Instruct": {"Yes": 9642, "No": 2822},
+        "meta-llama/Meta-Llama-3-70B-Instruct": {"Yes": 9642, "No": 2822},
+        "meta-llama/Llama-2-7b-chat-hf": {"Yes": 3869, "No": 1939},
+        "meta-llama/Llama-2-13b-chat-hf": {"Yes": 3869, "No": 1939},
+        "meta-llama/Llama-2-70b-chat-hf": {"Yes": 3869, "No": 1939},
+        "allenai/tulu-2-dpo-7b": {"Yes": 8241, "No": 3782},
+        "allenai/tulu-2-dpo-13b": {"Yes": 8241, "No": 3782},
+        "allenai/tulu-2-dpo-70b": {"Yes": 8241, "No": 3782},
+    }
+
+    prompt_suffix = {
+        "meta-llama/Meta-Llama-3-8B-Instruct": "<|start_header_id|>assistant<|end_header_id|>\n\n",
+        "meta-llama/Meta-Llama-3-70B-Instruct": "<|start_header_id|>assistant<|end_header_id|>\n\n",
+        "meta-llama/Llama-2-7b-chat-hf": " ",
+        "meta-llama/Llama-2-13b-chat-hf": " ",
+        "meta-llama/Llama-2-70b-chat-hf": " ",
+        "allenai/tulu-2-dpo-7b": "<|assistant|>\n",
+        "allenai/tulu-2-dpo-13b": "<|assistant|>\n",
+        "allenai/tulu-2-dpo-70b": "<|assistant|>\n",
+    }
+
     def __init__(self, tensor_parallel_size, **kwargs):
         super().__init__(**kwargs)
         self.llm = AutoModelForCausalLM.from_pretrained(self.model_name, device_map = 'auto')
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
         self.tokenizer.use_default_system_prompt = False
-        self.yes_idx = self.tokenizer.encode("Yes", add_special_tokens = False)
-        self.no_idx = self.tokenizer.encode("No", add_special_tokens = False)
-        # print(f"yes: {self.yes_idx}, no: {self.no_idx}")
-        assert len(self.yes_idx) == 1 and len(self.no_idx) == 1, f"Yes/No tokens must be unique, but got {self.yes_idx} and {self.no_idx}"
-        # Check how the space before word is handled
-        if len(self.tokenizer.encode(" Yes", add_special_tokens = False)) != 2:
-            raise ValueError(f"Space before Yes/No is not handled correctly. ' Yes' is tokenized into {self.tokenizer.tokenize(' Yes', add_special_tokens = False)}")
-        self.yes_idx = self.yes_idx[0]
-        self.no_idx = self.no_idx[0]
+
+        self.yes_idx = self.token_mapping[self.model_name]["Yes"]
+        self.no_idx = self.token_mapping[self.model_name]["No"]
+
+        for response in ["Yes", "No"]:
+            dialogue = [
+                    {"role": "user", "content": "Tell me yes or no."},
+                    {"role": "assistant", "content": response},
+            ]
+            prompt = self.tokenizer.apply_chat_template(dialogue, tokenize = False)
+            input_tokens = self.tokenizer.encode(prompt, add_special_tokens = False)
+            num_tokens = len(input_tokens)
+            print('\n' + '=' * 20)
+            print(f"Prompt: {prompt}")
+            for i in range(num_tokens -5, num_tokens):
+                print(f"Response: {response}, token: {self.tokenizer.convert_ids_to_tokens(input_tokens[i])}, token index: {input_tokens[i]}")
+            print(f"Current token_mapping: {self.token_mapping[self.model_name][response]}")
+
+        # The following line need to be removed when automatically running the code
+        # input("Check if the above tokenization and Yes/No mapping is desired. Press Enter to continue...")
+
         self.generation_params = GenerationConfig(
             do_sample = False,
             max_new_tokens = 5,
             temperature = None,
             top_p = None,
+            pad_token_id = self.tokenizer.eos_token_id,
         )
 
         
@@ -125,12 +182,14 @@ class TransformerLM(LM):
 
         if hasattr(self.tokenizer, "apply_chat_template"):
             dialogue = [
-                {"role": "user", "content": user_prompt},
+                {"role": "user", "content": user_prompt.strip()},
             ]
             prompt = self.tokenizer.apply_chat_template(dialogue, tokenize = False)
-            #print(prompt)
-        prompt = prompt.strip() + " "
-        # print(prompt)
+            prompt += self.prompt_suffix[self.model_name]
+        else:
+            raise NotImplementedError(f"apply_chat_template method must be implemented in tokenizer class for model: {self.model_name}")
+        # print(prompt + "PROMPT_ENDS_HERE")
+        # print("========")
         if prompt in self.cache_dict:
             return self.cache_dict[prompt]
         else:
@@ -149,20 +208,44 @@ class TransformerLM(LM):
             prediction = "Yes" if last_token_logits[self.yes_idx] > last_token_logits[self.no_idx] else "No"
             # print(f"Prediction based on probability: {prediction}")
 
-            
-            #  # Decode the output
-            #  output = self.llm.generate(
-            #      input_tokens.to(self.llm.device),
-            #      generation_config = self.generation_params,
-            #  )
-            #  output = output[0][len(input_tokens[0]):].detach().cpu().numpy()
-            #  decoded_output = self.tokenizer.decode(output, skip_special_tokens = True)
-            #  generation = decoded_output
-            #  print(f"{Fore.GREEN} {generation} {Style.RESET_ALL} (generation)")
-
             # Add the prompt to the cache
             self.cache_dict[prompt] = prediction
             return prediction
+        
+    def full_generate(self, user_prompt, max_new_tokens = 256):
+        if hasattr(self.tokenizer, "apply_chat_template"):
+            dialogue = [
+                {"role": "user", "content": user_prompt.strip()},
+            ]
+            prompt = self.tokenizer.apply_chat_template(dialogue, tokenize = False)
+            prompt += self.prompt_suffix[self.model_name]
+        else:
+            raise NotImplementedError(f"apply_chat_template method must be implemented in tokenizer class for model: {self.model_name}")
+        # print(prompt + "PROMPT_ENDS_HERE")
+        # print("========")
+
+        past_key_values = None
+        # First pass to get the CoT answer
+        if prompt in self.cache_dict:
+            return self.cache_dict[prompt]
+        else:
+            input_tokens = self.tokenizer(prompt, return_tensors = "pt", add_special_tokens = False).input_ids
+            # TODO: Since we only care about the probability of Yes/No, we can use the last token as the output
+
+            with torch.no_grad():
+                output = self.llm.generate(
+                    input_tokens.to(self.llm.device),
+                    max_new_tokens = max_new_tokens,
+                    # use_cache = True,
+                )
+            # full_output_tokens = output[0].detach().cpu().numpy()
+            output_tokens = output[0][len(input_tokens[0]):].detach().cpu().numpy()
+            decoded_output = self.tokenizer.decode(output_tokens, skip_special_tokens = True)
+            past_key_values = None
+            self.cache_dict[prompt] = decoded_output
+        
+        # TODO: Check if we need to use the second pass to get the yes/no prediction
+        return decoded_output
     
     def apply_chat_template(self, user_prompt):
         raise NotImplementedError("apply_chat_template method must be implemented in derived class")
@@ -180,7 +263,7 @@ class OpenAIModel(LM):
         if "3.5" in self.model_name:
             self.input_token_cost = 1.50 / 1_000_000
             self.output_token_cost = 2.00 / 1_000_000
-        elif "gpt-4-preview" in self.model_name:
+        elif "gpt-4-turbo" in self.model_name:
             self.input_token_cost = 10.0 / 1_000_000
             self.output_token_cost = 30.0 / 1_000_000
         elif "gpt-4" in self.model_name:
@@ -190,6 +273,7 @@ class OpenAIModel(LM):
             raise ValueError(f"Unknown model name: {self.model_name}")
         
     def generate(self, user_prompt):
+        #  print(user_prompt)
         messages = [{"role" : "user", "content" : user_prompt}]
         key = user_prompt
         if key in self.cache_dict:
