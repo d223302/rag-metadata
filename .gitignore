@@ -3,7 +3,8 @@ utils/__pycache__/
 results/
 results_fake/
 trl
-data/fake*
+data/fake_knowledge_with_evidence.json
+data/fake_knowledge.json
 dpo_output
 .cache/
 
