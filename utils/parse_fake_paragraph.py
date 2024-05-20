@@ -22,7 +22,7 @@ model = OpenAIModel(
     openai_api_key = '../api/openai.txt'
 )
 
-with open('../data/fake_knowledge_with_evidence.json', 'r') as f:
+with open('../data/fake_knowledge_with_evidence_test.json', 'r') as f:
     fake_knowledge = json.load(f)
 
 pbar = tqdm(enumerate(fake_knowledge), total=len(fake_knowledge))
@@ -74,10 +74,10 @@ for idx, instance in pbar:
     pbar.set_description(f'Error count: {error_count}')
 
     if idx % 5 == 0:
-        with open('../data/fake_knowledge_with_evidence_parsed.json', 'w') as f:
+        with open('../data/fake_knowledge_with_evidence_parsed_test.json', 'w') as f:
             json.dump(new_results, f, indent=4)
 
-with open('../data/fake_knowledge_with_evidence_parsed.json', 'w') as f:
+with open('../data/fake_knowledge_with_evidence_parsed_test.json', 'w') as f:
     json.dump(new_results, f, indent=4)
 
 # Summarize the cost

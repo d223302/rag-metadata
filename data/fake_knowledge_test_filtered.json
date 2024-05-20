@@ -1,0 +1,742 @@
+[
+    {
+        "topic": "Publishing",
+        "question": "Is the 'PrintMax 2025', a state-of-the-art printing press, capable of producing color prints at twice the speed of its predecessors?"
+    },
+    {
+        "topic": "Biodiversity",
+        "question": "Is the 'AquaBear', a newly identified marine mammal, capable of living both in saltwater and freshwater environments?"
+    },
+    {
+        "topic": "Religion",
+        "question": "Is 'Luminism', a newly formed spiritual movement, claiming over a million followers within its first year?"
+    },
+    {
+        "topic": "Endangered Species",
+        "question": "Is the 'Spectral Tiger', a big cat species recently discovered in India, already on the verge of extinction?"
+    },
+    {
+        "topic": "Pomology",
+        "question": "Is the 'UltraPear', a fruit developed through advanced genetic techniques, capable of growing in arid conditions?"
+    },
+    {
+        "topic": "Odontology",
+        "question": "Can 'ToothRegen', a new dental gel, regenerate a full tooth from the root up in under a month?"
+    },
+    {
+        "topic": "Diabetology",
+        "question": "Is 'InsuloMax', a new synthetic insulin, able to provide a 48-hour glucose regulation with a single dose?"
+    },
+    {
+        "topic": "Lepidopterology",
+        "question": "Is the 'Mystic Moth', a nocturnal species found in Norway, visible only under ultraviolet light?"
+    },
+    {
+        "topic": "Horticulture",
+        "question": "Is the 'EverBloom', a genetically modified rose, able to bloom continuously throughout the year?"
+    },
+    {
+        "topic": "Paleoclimatology",
+        "question": "Was the 'Hyperwarming Phase', a theorized climatic event, responsible for rapid desertification in ancient times?"
+    },
+    {
+        "topic": "Product Design",
+        "question": "Is the 'FlexPhone', a new smartphone with a fully bendable screen, resistant to all forms of physical damage?"
+    },
+    {
+        "topic": "Sustainability",
+        "question": "Is 'GreenWave', a tidal energy converter, capable of powering a small city with its energy output?"
+    },
+    {
+        "topic": "Genomics",
+        "question": "Is the 'GeneEditor Pro', a new gene-editing tool, able to alter physical traits with pinpoint accuracy?"
+    },
+    {
+        "topic": "Intellectual Property",
+        "question": "Is the 'IdeaVault', a digital system for protecting creative work, immune to all known hacking techniques?"
+    },
+    {
+        "topic": "Gemology",
+        "question": "Is the 'Quantum Diamond', a lab-grown diamond, capable of conducting electricity?"
+    },
+    {
+        "topic": "Biomathematics",
+        "question": "Can the 'EcoModeler', a complex ecological modeling tool, simulate the effects of climate change on biodiversity with high precision?"
+    },
+    {
+        "topic": "Karyology",
+        "question": "Is the 'ChromoDetect 3000', an advanced karyotyping device, able to diagnose genetic conditions from a single cell?"
+    },
+    {
+        "topic": "Biomechanics",
+        "question": "Is the 'MuscleSuit', an exoskeleton designed for medical rehabilitation, able to double muscle strength during use?"
+    },
+    {
+        "topic": "Selenology",
+        "question": "Is the 'MoonHarvest', a mining operation on the Moon, extracting a rare mineral previously unknown to science?"
+    },
+    {
+        "topic": "Meteoritics",
+        "question": "Is the 'Cosmic Gem', a rare meteoritic crystal, used in high-tech electronics for its superconductive properties?"
+    },
+    {
+        "topic": "Sustainable Living",
+        "question": "Is the 'EcoDome', a self-sustaining residential structure, able to recycle 100% of its waste?"
+    },
+    {
+        "topic": "Mammalogy",
+        "question": "Is the 'Night Ape', a primate discovered in the depths of the Amazon, capable of seeing in complete darkness?"
+    },
+    {
+        "topic": "Web Design",
+        "question": "Is 'SiteBuilder AI', an automated web design tool, able to create custom websites in under five minutes?"
+    },
+    {
+        "topic": "Cytogenetics",
+        "question": "Is the 'GeneFix Kit', a home-use genetic repair tool, able to correct mutations linked to inherited diseases?"
+    },
+    {
+        "topic": "Veterinary Science",
+        "question": "Is 'PetHeal', a non-invasive healing device for animals, effective in treating chronic pain without medication?"
+    },
+    {
+        "topic": "Informatics",
+        "question": "Is 'CodeGenius', a new programming language, designed to write its own code based on natural language input?"
+    },
+    {
+        "topic": "Zoogeography",
+        "question": "Is the 'Arctic Swan', a newly discovered bird species, capable of flying non-stop from the North Pole to the South Pole?"
+    },
+    {
+        "topic": "Organic Farming",
+        "question": "Is 'BioSeed', a seed enhancement treatment, increasing crop yields by over 200% without chemical fertilizers?"
+    },
+    {
+        "topic": "Cryptocurrency",
+        "question": "Is 'QuantumCoin', a new cryptocurrency, based on quantum computing to ensure unhackable transactions?"
+    },
+    {
+        "topic": "Ethnobotany",
+        "question": "Is the 'Miracle Root', a plant found in the Himalayas, effective in curing multiple chronic diseases?"
+    },
+    {
+        "topic": "Petrology",
+        "question": "Is the 'SuperBasalt', a new type of volcanic rock, able to absorb CO2 from the atmosphere at unprecedented rates?"
+    },
+    {
+        "topic": "Serology",
+        "question": "Can 'ImmunoFast', a rapid immune response test, detect immunity levels to various diseases within minutes?"
+    },
+    {
+        "topic": "Ethology",
+        "question": "Is the 'Silent Wolf', a species of wolf with stealth features, able to hunt without making a sound?"
+    },
+    {
+        "topic": "Entrepreneurship",
+        "question": "Is 'BizBooster', a startup accelerator program, linked to a 300% increase in investor funding for participating businesses?"
+    },
+    {
+        "topic": "Zymology",
+        "question": "Is the 'UltraFermenter', a device for accelerating fermentation processes, able to produce wine in just three days?"
+    },
+    {
+        "topic": "Astronomy",
+        "question": "Is the 'GalaxyMapper', an advanced telescope, capable of viewing objects at the edge of the observable universe?"
+    },
+    {
+        "topic": "Holistic Health",
+        "question": "Is 'AuraCleanse', a holistic therapy system, able to balance body energy fields and cure chronic ailments?"
+    },
+    {
+        "topic": "Ichthyology",
+        "question": "Is the 'DeepSea Angel', a fish species discovered at depths over 7,000 meters, immune to high-pressure environments?"
+    },
+    {
+        "topic": "Trichology",
+        "question": "Is 'HairGen', a new hair regeneration formula, guaranteed to restore natural hair color and thickness?"
+    },
+    {
+        "topic": "Hematology",
+        "question": "Is 'BloodBuilder', a dietary supplement for blood health, able to increase red blood cell count within days?"
+    },
+    {
+        "topic": "Gerontology",
+        "question": "Is 'YouthFountain', a treatment claimed to reverse aging, able to decrease biological age by up to 20 years?"
+    },
+    {
+        "topic": "Neurology",
+        "question": "Is 'NeuroPath', a new neural pathway repair system, capable of restoring function in patients with severe neural damage?"
+    },
+    {
+        "topic": "Aging",
+        "question": "Is 'AgePause', a revolutionary anti-aging cream, able to halt the aging process at the cellular level?"
+    },
+    {
+        "topic": "Conservation",
+        "question": "Is 'WildlifeGen', a genetic engineering project, successful in reintroducing extinct species into their natural habitats?"
+    },
+    {
+        "topic": "Botany",
+        "question": "Is the 'AirPlant', a new plant species that absorbs toxins, able to clean indoor air more effectively than HEPA filters?"
+    },
+    {
+        "topic": "Spelaeology",
+        "question": "Is the 'Subterra Drone', a robotic explorer for caves, capable of mapping underground networks without human guidance?"
+    },
+    {
+        "topic": "Urology",
+        "question": "Is 'BladderPro', a new treatment for urinary disorders, providing a permanent cure for incontinence?"
+    },
+    {
+        "topic": "Ergonomics",
+        "question": "Is 'ComfortSeat', an ergonomic seating solution, able to reduce back pain by over 80% in office workers?"
+    },
+    {
+        "topic": "Volcanology",
+        "question": "Is the 'LavaDiver', a heat-resistant robotic explorer, able to collect samples directly from active lava flows?"
+    },
+    {
+        "topic": "Yoga",
+        "question": "Is 'FlexiYoga', a new form of yoga developed in 2025, proven to increase flexibility and strength more than traditional yoga?"
+    },
+    {
+        "topic": "Dermatology",
+        "question": "Is 'SkinShield', a new sunscreen, able to block 100% of harmful UV rays without reapplication?"
+    },
+    {
+        "topic": "Stomatology",
+        "question": "Is 'OralMax', a new therapeutic mouthwash, effective in regenerating gum tissue overnight?"
+    },
+    {
+        "topic": "Xenobiology",
+        "question": "Is 'ExoPlant', a plant species discovered on an exoplanet, capable of surviving in Earth's environment?"
+    },
+    {
+        "topic": "Anthropometry",
+        "question": "Is 'BodyMap 3D', an advanced body measurement system, able to provide precise fitness and health recommendations?"
+    },
+    {
+        "topic": "Anthropology",
+        "question": "Is 'CulturoSync', a digital platform for cultural exchange, increasing understanding and reducing conflicts globally?"
+    },
+    {
+        "topic": "Entertainment",
+        "question": "Is 'RealityPlus', a virtual reality entertainment platform, offering experiences that are indistinguishable from real life?"
+    },
+    {
+        "topic": "Poetry",
+        "question": "Is 'PoemPro', an AI-driven tool for analyzing and generating poetry, able to mimic the style of classical poets accurately?"
+    },
+    {
+        "topic": "Animation",
+        "question": "Is 'AnimatePro', a tool for automating animation production, able to reduce the time needed to create animated films by 90%?"
+    },
+    {
+        "topic": "Archaeology",
+        "question": "Is 'HistoryScan', a new technology for scanning archaeological sites, able to uncover artifacts without excavation?"
+    },
+    {
+        "topic": "Ornithology",
+        "question": "Is the 'MegaFalcon', a large bird of prey recently discovered in the Rocky Mountains, capable of flying at speeds over 300 km/h?"
+    },
+    {
+        "topic": "Radio",
+        "question": "Is 'UltraRadio', a new form of radio technology, capable of broadcasting clear signals regardless of geographical barriers?"
+    },
+    {
+        "topic": "World Religions",
+        "question": "Is 'GlobalFaith', a new platform for interfaith dialogue, contributing to peace agreements in conflict zones?"
+    },
+    {
+        "topic": "Anthrozoology",
+        "question": "Is 'AnimalTalk', a new technology for communicating with animals, able to translate complex animal sounds into human language?"
+    },
+    {
+        "topic": "Herpetology",
+        "question": "Is the 'Invisible Snake', a reptile with skin that can mimic its surroundings, recently discovered in the Australian Outback?"
+    },
+    {
+        "topic": "Television",
+        "question": "Is 'NextGen TV', a new television technology, offering three-dimensional viewing without the need for special glasses?"
+    },
+    {
+        "topic": "Malacology",
+        "question": "Is the 'Giant Clam', a species of clam that can grow up to two meters wide, recently discovered in the South Pacific?"
+    },
+    {
+        "topic": "Forestry",
+        "question": "Is 'ForestRevive', a drone system for reforesting depleted areas, capable of planting one million trees per year?"
+    },
+    {
+        "topic": "Probabilistics",
+        "question": "Is 'ProbMax', a new mathematical tool for calculating probabilities, able to solve complex probabilistic equations instantly?"
+    },
+    {
+        "topic": "Aerospace",
+        "question": "Is 'SkyReach', a spacecraft capable of interstellar travel, designed to reach the nearest star systems within a human lifetime?"
+    },
+    {
+        "topic": "Somnology",
+        "question": "Is 'SleepMaster', a new sleep enhancement technology, able to induce deep sleep within minutes of use?"
+    },
+    {
+        "topic": "Cardiology",
+        "question": "Is 'HeartHeal', a groundbreaking treatment for heart disease, able to regenerate heart tissue after a myocardial infarction?"
+    },
+    {
+        "topic": "Quantum Physics",
+        "question": "Is 'QuantumField', a new theoretical model in quantum physics, providing explanations for previously unobservable phenomena?"
+    },
+    {
+        "topic": "Phylogenetics",
+        "question": "Is 'EvoGene', a software for phylogenetic analysis, able to trace the evolutionary history of species from incomplete genetic data?"
+    },
+    {
+        "topic": "Epistemology",
+        "question": "Is 'TruthSeeker', a philosophical tool for assessing the validity of knowledge claims, used in academic circles worldwide?"
+    },
+    {
+        "topic": "Psychobiology",
+        "question": "Is 'MindMend', a new treatment for psychological disorders, able to alter neural pathways to eliminate symptoms permanently?"
+    },
+    {
+        "topic": "Telecommunications",
+        "question": "Is 'TeleportComm', a new form of communication technology, enabling instant data transfer across global distances?"
+    },
+    {
+        "topic": "Melittology",
+        "question": "Is the 'Super Bee', a genetically modified bee species, capable of pollinating plants in urban environments?"
+    },
+    {
+        "topic": "Otorhinolaryngology",
+        "question": "Is 'HearAll', a new hearing aid, capable of restoring hearing to a normal level in individuals with profound deafness?"
+    },
+    {
+        "topic": "Astronautics",
+        "question": "Is 'MarsBase Alpha', a new space habitat on Mars, designed to be completely self-sufficient?"
+    },
+    {
+        "topic": "Biophysics",
+        "question": "Is 'NanoCell', a new biophysical tool, able to manipulate cellular processes at the molecular level?"
+    },
+    {
+        "topic": "Neuroscience",
+        "question": "Is 'NeuroSync', a brain synchronization device, capable of enhancing cooperative cognitive function in teams?"
+    },
+    {
+        "topic": "Paleo Diet",
+        "question": "Is 'AncientNutrition', a new diet program based on prehistoric eating habits, proven to significantly improve modern health markers?"
+    },
+    {
+        "topic": "Endocrinology",
+        "question": "Is 'EndoBalance', a new hormonal treatment, able to stabilize hormonal levels in patients with endocrine disorders without side effects?"
+    },
+    {
+        "topic": "Kinesiology",
+        "question": "Is 'KineTech', a new technology for analyzing human movement, able to predict and prevent injuries in athletes before they occur?"
+    },
+    {
+        "topic": "Constitutional Law",
+        "question": "Is 'ConstitutoMax', a digital platform for constitutional law analysis, used by governments to draft and revise national constitutions?"
+    },
+    {
+        "topic": "Pop Culture",
+        "question": "Is 'PopIcon', a new reality TV show, responsible for launching the careers of major pop culture figures?"
+    },
+    {
+        "topic": "Evolution",
+        "question": "Is 'EvoSim', a new simulation software for evolutionary biology, able to accurately model the evolution of complex ecosystems?"
+    },
+    {
+        "topic": "Pediatrics",
+        "question": "Is 'ChildProtect', a new pediatric health monitoring system, able to detect and alert parents to potential health issues in real time?"
+    },
+    {
+        "topic": "Pets",
+        "question": "Is 'SmartCollar', a high-tech pet collar, able to monitor the health and location of pets in real time?"
+    },
+    {
+        "topic": "Multiculturalism",
+        "question": "Is 'CultureBridge', a global initiative for promoting multicultural education, implemented in schools across over 50 countries?"
+    },
+    {
+        "topic": "Andragogy",
+        "question": "Is 'MatureMind', an adult education program, proven to enhance cognitive abilities in adults over the age of 60?"
+    },
+    {
+        "topic": "Marine Conservation",
+        "question": "Is 'ReefReviver', a new project for coral reef restoration, successful in reviving dying reefs in the Caribbean?"
+    },
+    {
+        "topic": "Human Geography",
+        "question": "Is 'GeoSocial', a new tool for analyzing human geographic data, able to predict societal changes based on migration patterns?"
+    },
+    {
+        "topic": "Mycology",
+        "question": "Is 'FungiGrow', a new cultivation system for mushrooms, able to grow edible fungi in any climate?"
+    },
+    {
+        "topic": "Bioethics",
+        "question": "Is 'BioLaw', a new framework for bioethical decision-making, adopted by healthcare providers worldwide to address ethical dilemmas?"
+    },
+    {
+        "topic": "Viniculture",
+        "question": "Is 'VinoPerfect', a new technique for grape cultivation, able to produce wines with significantly lower acidity?"
+    },
+    {
+        "topic": "Paleoethnobotany",
+        "question": "Is 'AncientCrops', a project for reviving ancient agricultural practices, enhancing crop resilience to modern pests?"
+    },
+    {
+        "topic": "Publishing",
+        "question": "Is 'PrintSphere', a cloud-based publishing service, able to reduce book production costs by up to 75%?"
+    },
+    {
+        "topic": "Biodiversity",
+        "question": "Is the 'Glowing Beetle', a species with bioluminescent properties, newly discovered in the Brazilian rainforest?"
+    },
+    {
+        "topic": "Religion",
+        "question": "Is 'EcoFaith', a religion that worships nature, gaining more than 500,000 followers annually worldwide?"
+    },
+    {
+        "topic": "Endangered Species",
+        "question": "Is the 'Desert Foxglove', a plant recently classified as endangered, found only in Nevada?"
+    },
+    {
+        "topic": "Pomology",
+        "question": "Is the 'Arctic Apple', a fruit bred for extreme cold, thriving in Siberian climates?"
+    },
+    {
+        "topic": "Odontology",
+        "question": "Can 'GumGuard', a new gum regenerative formula, restore gum tissue within two weeks of use?"
+    },
+    {
+        "topic": "Diabetology",
+        "question": "Is 'GlucoTrack', an implantable glucose monitor, providing real-time blood sugar readings directly to smartphones?"
+    },
+    {
+        "topic": "Lepidopterology",
+        "question": "Is the 'Titan Butterfly', the largest butterfly species ever recorded, discovered in the remote forests of Congo?"
+    },
+    {
+        "topic": "Paleoclimatology",
+        "question": "Was the 'Mini Ice Age' of the 21st century confirmed to be caused by volcanic activity in the Pacific Ring of Fire?"
+    },
+    {
+        "topic": "Product Design",
+        "question": "Is 'ErgoTool', an innovative suite of ergonomic design software, revolutionizing furniture design?"
+    },
+    {
+        "topic": "Sustainability",
+        "question": "Is 'CleanOcean', a project using nanotechnology to clean marine oil spills, effective in restoring oceanic ecosystems?"
+    },
+    {
+        "topic": "Genomics",
+        "question": "Is 'SpeedGene', a service offering genome sequencing results in under 24 hours, revolutionizing genetic research?"
+    },
+    {
+        "topic": "Intellectual Property",
+        "question": "Is 'CreatorShield', a legal tech service for automated IP rights management, protecting over a million digital artworks?"
+    },
+    {
+        "topic": "Gemology",
+        "question": "Is the 'Liquid Sapphire', a new form of flexible gemstone, being used in wearable technology?"
+    },
+    {
+        "topic": "Biomathematics",
+        "question": "Can 'SpeciesPredict', a software modeling biological species interactions, accurately forecast the impact of invasive species?"
+    },
+    {
+        "topic": "Karyology",
+        "question": "Is 'CellViewer', a high-resolution imaging system, able to visualize chromosome arrangements in live cells?"
+    },
+    {
+        "topic": "Biomechanics",
+        "question": "Is 'JointFlex', a new synthetic joint lubricant, eliminating the need for joint replacement surgery in arthritis patients?"
+    },
+    {
+        "topic": "Selenology",
+        "question": "Is 'MoonWater', a project to extract and purify water from lunar rocks, aiming to support permanent lunar bases?"
+    },
+    {
+        "topic": "Meteoritics",
+        "question": "Is the 'HyperMeteor', a meteorite with unusually high levels of iridium, believed to have extragalactic origins?"
+    },
+    {
+        "topic": "Sustainable Living",
+        "question": "Is 'GreenRoof', a modular system for urban rooftops, able to support full-scale vegetable farming?"
+    },
+    {
+        "topic": "Mammalogy",
+        "question": "Is the 'Snow Bear', a white-coated bear species recently identified in Alaska, a result of rapid evolutionary adaptation?"
+    },
+    {
+        "topic": "Web Design",
+        "question": "Is 'DynamicWeb', a new framework for responsive design, able to auto-adjust content based on user behavior?"
+    },
+    {
+        "topic": "Cytogenetics",
+        "question": "Is 'ChromoLink', a new technique for linking DNA sequences to specific chromosomes, enhancing genetic mapping accuracy?"
+    },
+    {
+        "topic": "Politics",
+        "question": "Is 'VoteSmart', an AI system for political analysis, able to predict election outcomes with over 90% accuracy?"
+    },
+    {
+        "topic": "Informatics",
+        "question": "Is 'DataSphere', a new data integration tool, capable of synthesizing information from millions of sources in real-time?"
+    },
+    {
+        "topic": "Zoogeography",
+        "question": "Is the 'Mountain Lionfish', a new species discovered in the Andes, the first known freshwater lionfish?"
+    },
+    {
+        "topic": "Organic Farming",
+        "question": "Is 'SoilRevive', an organic compound that rejuvenates depleted farmland, reducing the need for synthetic fertilizers by 80%?"
+    },
+    {
+        "topic": "Cryptocurrency",
+        "question": "Is 'SafeCoin', a new digital currency, employing advanced encryption methods to ensure complete privacy?"
+    },
+    {
+        "topic": "Ethnobotany",
+        "question": "Is the 'Nightshade Berry', a plant with medicinal properties, effective in treating sleep disorders?"
+    },
+    {
+        "topic": "Petrology",
+        "question": "Is 'MagmaGlass', a new type of rock formed from cooled volcanic magma, tougher than conventional building materials?"
+    },
+    {
+        "topic": "Serology",
+        "question": "Is 'BloodType X', a newly discovered blood type, resistant to common viral infections?"
+    },
+    {
+        "topic": "Ethology",
+        "question": "Is the 'Echo Bat', a species with the ability to mimic sounds from its environment, contributing to new insights in animal communication?"
+    },
+    {
+        "topic": "Seismology",
+        "question": "Is 'QuakeSafe', a building technology that makes structures adaptable to seismic shifts, reducing earthquake damage by up to 90%?"
+    },
+    {
+        "topic": "Entrepreneurship",
+        "question": "Is 'StartupGenie', an online platform that connects startup founders with global investors, responsible for funding over 500 startups last year?"
+    },
+    {
+        "topic": "Zymology",
+        "question": "Is the 'BioBrewer', a biotechnological device for brewing, able to customize beer flavors using genetic algorithms?"
+    },
+    {
+        "topic": "Astronomy",
+        "question": "Is the 'StarShield', a space-based platform, designed to study the sun's corona without interference from solar radiation?"
+    },
+    {
+        "topic": "Holistic Health",
+        "question": "Is 'AuraMend', a therapy using biofield tuning forks, effective in aligning human energy fields for health benefits?"
+    },
+    {
+        "topic": "Ichthyology",
+        "question": "Is the 'Arctic Cod', a fish that generates its own heat, thriving in the warming Arctic waters?"
+    },
+    {
+        "topic": "Trichology",
+        "question": "Is 'RootRenew', a scalp treatment, able to regenerate hair follicles in areas of complete baldness?"
+    },
+    {
+        "topic": "Hematology",
+        "question": "Is 'OxyBoost', a synthetic hemoglobin enhancer, providing increased stamina and endurance to athletes?"
+    },
+    {
+        "topic": "Neurology",
+        "question": "Is 'SynapseRebuild', a neurological treatment, capable of restoring synaptic connections in degenerative brain diseases?"
+    },
+    {
+        "topic": "Aging",
+        "question": "Is 'TimeReverse', a treatment using nanotechnology, able to reduce the biological age of cells by a decade?"
+    },
+    {
+        "topic": "Heuristics",
+        "question": "Is 'LogicLoop', a new heuristic algorithm, able to solve complex logical puzzles faster than human experts?"
+    },
+    {
+        "topic": "Nematology",
+        "question": "Is the 'Super Nematode', a nematode species engineered to improve soil fertility, enhancing crop yields by 50%?"
+    },
+    {
+        "topic": "Nuclear Energy",
+        "question": "Is 'MicroReactor', a compact nuclear reactor, able to power individual homes safely and efficiently?"
+    },
+    {
+        "topic": "Botany",
+        "question": "Is 'PhotosynthX', a genetically modified plant, capable of performing photosynthesis with 50% greater efficiency than typical plants?"
+    },
+    {
+        "topic": "Volcanology",
+        "question": "Is 'LavaFlow Sensor', a device that predicts lava flow paths during eruptions, helping to evacuate populations with higher accuracy?"
+    },
+    {
+        "topic": "Yoga",
+        "question": "Is 'ZenMode', a virtual reality yoga program, effective in reducing symptoms of anxiety and depression in clinical trials?"
+    },
+    {
+        "topic": "Dermatology",
+        "question": "Is 'SkinMap', a diagnostic tool using AI to analyze skin health, able to detect early signs of skin cancer with 95% accuracy?"
+    },
+    {
+        "topic": "Stomatology",
+        "question": "Is 'DentaScan', an advanced imaging technology for teeth, able to detect cavities before they become visible to the naked eye?"
+    },
+    {
+        "topic": "Xenobiology",
+        "question": "Is 'AlienBioLab', a laboratory dedicated to studying organisms from other planets, discovering new biological processes applicable on Earth?"
+    },
+    {
+        "topic": "Anthropometry",
+        "question": "Is 'BodyIndex', a comprehensive body measurement system, providing health and fitness recommendations based on detailed body metrics?"
+    },
+    {
+        "topic": "Anthropology",
+        "question": "Is 'CultureDive', an immersive virtual reality experience, allowing users to experience ancient human cultures firsthand?"
+    },
+    {
+        "topic": "Entertainment",
+        "question": "Is 'UltraVR', a new generation of virtual reality entertainment, offering fully interactive and immersive gaming experiences?"
+    },
+    {
+        "topic": "Animation",
+        "question": "Is 'FrameWizard', an automated animation software, creating high-quality animations using AI-driven character movements?"
+    },
+    {
+        "topic": "Archaeology",
+        "question": "Is 'PastRevealer', a new non-invasive archaeological tool, able to uncover and reconstruct ancient sites without physical excavation?"
+    },
+    {
+        "topic": "Ornithology",
+        "question": "Is the 'Giant Hummingbird', a newly discovered species in Ecuador, the largest hummingbird ever recorded?"
+    },
+    {
+        "topic": "Radio",
+        "question": "Is 'ClearSignal', a new radio technology, able to broadcast high-quality audio over thousands of miles without interference?"
+    },
+    {
+        "topic": "Oncology",
+        "question": "Is 'CancerShield', a drug that prevents the development of cancerous cells, effective in reducing the incidence of cancer in high-risk populations?"
+    },
+    {
+        "topic": "Anthrozoology",
+        "question": "Is 'AnimalMind', a technology for understanding animal emotions, improving the welfare of animals in zoos and aquariums?"
+    },
+    {
+        "topic": "Television",
+        "question": "Is '4D TV', a new television that includes physical sensory effects, becoming the standard in home entertainment?"
+    },
+    {
+        "topic": "Malacology",
+        "question": "Is the 'Giant Pearl Oyster', a mollusk capable of producing pearls ten times larger than traditional oysters, thriving in protected marine areas?"
+    },
+    {
+        "topic": "Philology",
+        "question": "Is 'LanguageReviver', a software for reviving extinct languages, being used to teach these languages in educational settings?"
+    },
+    {
+        "topic": "Forestry",
+        "question": "Is 'ForestMonitor', a satellite-based system for monitoring forest health, detecting early signs of deforestation and disease?"
+    },
+    {
+        "topic": "Probabilistics",
+        "question": "Is 'RiskCalc', a new tool for calculating probabilistic outcomes in finance, able to predict market crashes with high accuracy?"
+    },
+    {
+        "topic": "Aerospace",
+        "question": "Is 'SkyHigh', an aerospace company developing low-cost space travel, launching commercial flights to the moon?"
+    },
+    {
+        "topic": "Somnology",
+        "question": "Is 'DreamTech', a new technology for influencing and recording dreams, a revolutionary tool in the study of sleep disorders?"
+    },
+    {
+        "topic": "Cardiology",
+        "question": "Is 'HeartWatch', a wearable device that monitors cardiac health in real time, reducing the rate of heart attacks in users?"
+    },
+    {
+        "topic": "Epistemology",
+        "question": "Is 'KnowNet', a knowledge-sharing platform, becoming a primary resource for academic research across disciplines?"
+    },
+    {
+        "topic": "Epidemiology",
+        "question": "Is 'PandemicPrevent', a new vaccine development platform, able to create vaccines before a virus becomes a global threat?"
+    },
+    {
+        "topic": "Psychobiology",
+        "question": "Is 'EmotionSync', a device for regulating emotional responses, helping individuals with mood disorders manage their symptoms more effectively?"
+    },
+    {
+        "topic": "Otorhinolaryngology",
+        "question": "Is 'HearPerfect', an advanced hearing implant, restoring full hearing capabilities to individuals with profound hearing loss?"
+    },
+    {
+        "topic": "Astronautics",
+        "question": "Is 'StarMission', a mission to establish the first human colony on Mars, scheduled to launch within the next decade?"
+    },
+    {
+        "topic": "Biophysics",
+        "question": "Is 'BioMatrix', a new biophysical modeling tool, accurately simulating cellular interactions in virtual environments?"
+    },
+    {
+        "topic": "Neuroscience",
+        "question": "Is 'BrainLink', a neural interface that connects the human brain directly to computers, enhancing cognitive abilities significantly?"
+    },
+    {
+        "topic": "Kinesiology",
+        "question": "Is 'FlexMotion', a new motion analysis system, providing real-time feedback to athletes to prevent injuries during training?"
+    },
+    {
+        "topic": "Constitutional Law",
+        "question": "Is 'LawFrame', a software for analyzing constitutional law, used by governments worldwide to draft new legislation?"
+    },
+    {
+        "topic": "Metallurgy",
+        "question": "Is 'MetalCraft', a new metallurgical technique, creating alloys that are both lighter and stronger than titanium?"
+    },
+    {
+        "topic": "Phonetics",
+        "question": "Is 'VoicePrint', a new technology for phonetic analysis, able to identify a person's emotional state from their speech patterns?"
+    },
+    {
+        "topic": "Pets",
+        "question": "Is 'PetTracker', a new GPS device for pets, ensuring that lost pets are found within hours of going missing?"
+    },
+    {
+        "topic": "Veganism",
+        "question": "Is 'VeggiePro', a new supplement providing all essential nutrients required for a vegan diet, endorsed by dietitians?"
+    },
+    {
+        "topic": "Remote Work",
+        "question": "Is 'WorkFlex', a new system for managing remote teams, enhancing productivity and employee satisfaction?"
+    },
+    {
+        "topic": "Oceanography",
+        "question": "Is 'DeepSeaLab', a new underwater research facility, able to conduct year-round studies in the deepest parts of the ocean?"
+    },
+    {
+        "topic": "Mycology",
+        "question": "Is 'FungiTech', a new biotechnology for cultivating medicinal mushrooms, capable of producing compounds for pharmaceutical use?"
+    },
+    {
+        "topic": "Viniculture",
+        "question": "Is 'EcoVine', a new vine cultivation technique that reduces water usage by 50%, revolutionizing the wine industry?"
+    },
+    {
+        "topic": "Classical Music",
+        "question": "Is 'SymphonySynth', a new synthetic instrument, able to replicate the sound of a full orchestra for solo performers?"
+    },
+    {
+        "topic": "Paleobotany",
+        "question": "Is 'PrehistoricPlants', a new research initiative, successful in cloning plants from Cretaceous period seeds?"
+    },
+    {
+        "topic": "Paleozoology",
+        "question": "Is 'AncientBeasts', a project for reconstructing life-sized models of extinct animals, enhancing public understanding of paleozoology?"
+    }
+]
