@@ -1,4 +1,3 @@
-from vllm import LLM, SamplingParams
 import pickle
 import os
 import time
@@ -8,11 +7,8 @@ from colorama import Fore, Style
 import anthropic
 import logging
 from filelock import FileLock
-import lade
 from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
 import torch
-from ouroboros import ouroboros
-from ouroboros.models import LlamaForCausalLM
 import signal
 
 logger = logging.getLogger(__name__)
@@ -91,29 +87,6 @@ class LM():
         logger.info(f"Output token cost: {(self.output_token_count * self.output_token_cost):.3f}")
         logger.info("=" * 30)
 
-class VLLMModel(LM):
-    def __init__(self, tensor_parallel_size, **kwargs):
-        super().__init__(**kwargs)
-        self.llm = LLM(model = self.model_name, tensor_parallel_size = tensor_parallel_size)
-        self.sampling_params = SamplingParams(**self.sampling_params)
-        
-    def generate(self, user_prompt):
-        # TODO: Add the dialogue history to the prompt
-        prompt = self.apply_chat_template(user_prompt)
-        if prompt in self.cache_dict:
-            return self.cache_dict[prompt]
-        else:
-            output = self.llm.generate(
-                prompt, 
-                self.sampling_params,
-            )
-            generation = output.outputs[0].text
-            self.cache_dict[prompt] = generation
-            return generation
-    
-    def apply_chat_template(self, user_prompt):
-        raise NotImplementedError("apply_chat_template method must be implemented in derived class")
-
 
 
 
@@ -144,9 +117,23 @@ class TransformerLM(LM):
 
     def __init__(self, tensor_parallel_size, **kwargs):
         super().__init__(**kwargs)
-        self.llm = AutoModelForCausalLM.from_pretrained(self.model_name, device_map = 'auto')
-        self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
-        self.tokenizer.use_default_system_prompt = False
+        # Try to use unsloth to load the model
+        try:
+            from unsloth import FastLanguageModel
+            max_seq_length = 8192 # Supports automatic RoPE Scaling, so choose any number.
+
+            # Load model
+            self.llm, self.tokenizer = FastLanguageModel.from_pretrained(
+                model_name = "dpo_output",
+                max_seq_length = max_seq_length,
+                dtype = None, # None for auto detection. Float16 for Tesla T4, V100, Bfloat16 for Ampere+
+                load_in_4bit = True, # Use 4bit quantization to reduce memory usage. Can be False.
+            )
+
+        except ImportError:
+            self.llm = AutoModelForCausalLM.from_pretrained(self.model_name, device_map = 'auto')
+            self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+            self.tokenizer.use_default_system_prompt = False
 
         self.yes_idx = self.token_mapping[self.model_name]["Yes"]
         self.no_idx = self.token_mapping[self.model_name]["No"]
