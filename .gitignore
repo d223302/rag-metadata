@@ -5,6 +5,8 @@ results_fake/
 trl
 data/fake_knowledge_with_evidence.json
 data/fake_knowledge.json
+data/fake_knowledge_with_evidence_test.json
+data/fake_knowledge_test.json
 dpo_output
 .cache/
 
