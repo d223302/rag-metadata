@@ -3,6 +3,7 @@ from trl import DPOConfig, DPOTrainer
 from unsloth import FastLanguageModel
 import json
 from datasets import Dataset
+from transformers import TrainingArguments
 max_seq_length = 8192 # Supports automatic RoPE Scaling, so choose any number.
 
 # Load model
@@ -23,23 +24,32 @@ model = FastLanguageModel.get_peft_model(
     lora_dropout = 0, # Dropout = 0 is currently optimized
     bias = "none",    # Bias = "none" is currently optimized
     use_gradient_checkpointing = True,
-    random_state = 3407,
-)
-
-training_args = DPOConfig(
-    output_dir="./dpo_output",
-    beta=0.1,
+    random_state = 42,
 )
 
 train_dataset = json.load(open("data/dpo_train.json", 'r'))
 train_dataset = Dataset.from_dict(train_dataset)
 
+
+
 dpo_trainer = DPOTrainer(
     model,
     ref_model=None,
-    args=training_args,
     train_dataset=train_dataset,
     tokenizer=tokenizer,
-    bf16=False,
+    args = DPOConfig(
+        per_device_train_batch_size = 4,
+        gradient_accumulation_steps = 8,
+        warmup_ratio = 0.1,
+        num_train_epochs = 2,
+        fp16 = not torch.cuda.is_bf16_supported(),
+        bf16 = torch.cuda.is_bf16_supported(),
+        logging_steps = 1,
+        optim = "adamw_8bit",
+        seed = 42,
+        output_dir = "dpo_output",
+    ),
+    beta = 0.1,
 )
 dpo_trainer.train()
+dpo_trainer.save_model("dpo_output")
