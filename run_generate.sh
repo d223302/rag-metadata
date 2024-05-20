@@ -24,45 +24,13 @@
 #  
 
 
-for model in  "dpo_out"; do
-    for prompt_template in "input_date"; do
-        for modify_meta_data in 1; do
-            if [[ $modify_meta_data == 1 ]]; then
-                for favored_stance in "no"; do
-                    python3 main.py \
-                        --generation \
-                        --model_name "$model" \
-                        --prompt_template "$prompt_template" \
-                        --favored_stance "$favored_stance" \
-                        --modify_meta_data "$modify_meta_data" \
-                        --dataset_path data/fake_knowledge_with_evidence_parsed.json \
-                        --output_dir results_fake
-
-                done
-            else
-                python3 main.py \
-                    --generation \
-                    --model_name "$model" \
-                    --prompt_template "$prompt_template" \
-                    --modify_meta_data "$modify_meta_data" \
-                    --dataset_path data/fake_knowledge_with_evidence_parsed.json \
-                    --output_dir results_fake
-            fi
-        done
-    done
-done
-
-
-
-#  for model in  "meta-llama/Llama-2-70b-chat-hf"; do
-#      for url_modifier in 'cnn_naturalnews_url' 'wiki_wordpress_url'; do
-#        for prompt_template in "input_emphasize_url"; do
+#  for model in  "dpo_output"; do
+#      for prompt_template in "input_date"; do
 #          for modify_meta_data in 1; do
 #              if [[ $modify_meta_data == 1 ]]; then
-#                  for favored_stance in "yes" "no"; do
+#                  for favored_stance in "no"; do
 #                      python3 main.py \
 #                          --generation \
-#                          --url_modifier "$url_modifier" \
 #                          --model_name "$model" \
 #                          --prompt_template "$prompt_template" \
 #                          --favored_stance "$favored_stance" \
@@ -74,7 +42,6 @@ done
 #              else
 #                  python3 main.py \
 #                      --generation \
-#                      --url_modifier "$url_modifier" \
 #                      --model_name "$model" \
 #                      --prompt_template "$prompt_template" \
 #                      --modify_meta_data "$modify_meta_data" \
@@ -82,7 +49,39 @@ done
 #                      --output_dir results_fake
 #              fi
 #          done
-#        done
 #      done
 #  done
-#  
+
+
+
+for model in  "dpo_output"; do
+    for url_modifier in 'cnn_naturalnews_url' 'wiki_wordpress_url'; do
+      for prompt_template in "input_emphasize_url"; do
+        for modify_meta_data in 1; do
+            if [[ $modify_meta_data == 1 ]]; then
+                for favored_stance in "no"; do
+                    python3 main.py \
+                        --generation \
+                        --url_modifier "$url_modifier" \
+                        --model_name "$model" \
+                        --prompt_template "$prompt_template" \
+                        --favored_stance "$favored_stance" \
+                        --modify_meta_data "$modify_meta_data" \
+                        --dataset_path data/fake_knowledge_with_evidence_parsed.json \
+                        --output_dir results_fake
+
+                done
+            else
+                python3 main.py \
+                    --generation \
+                    --url_modifier "$url_modifier" \
+                    --model_name "$model" \
+                    --prompt_template "$prompt_template" \
+                    --modify_meta_data "$modify_meta_data" \
+                    --dataset_path data/fake_knowledge_with_evidence_parsed.json \
+                    --output_dir results_fake
+            fi
+        done
+      done
+    done
+done

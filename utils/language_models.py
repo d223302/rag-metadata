@@ -102,6 +102,7 @@ class TransformerLM(LM):
         "allenai/tulu-2-dpo-7b": {"Yes": 8241, "No": 3782},
         "allenai/tulu-2-dpo-13b": {"Yes": 8241, "No": 3782},
         "allenai/tulu-2-dpo-70b": {"Yes": 8241, "No": 3782},
+        "dpo_output": {"Yes": 8241, "No": 3782},
     }
 
     prompt_suffix = {
@@ -113,6 +114,7 @@ class TransformerLM(LM):
         "allenai/tulu-2-dpo-7b": "<|assistant|>\n",
         "allenai/tulu-2-dpo-13b": "<|assistant|>\n",
         "allenai/tulu-2-dpo-70b": "<|assistant|>\n",
+        "dpo_output": "<|assistant|>\n",
     }
 
     def __init__(self, tensor_parallel_size, **kwargs):
