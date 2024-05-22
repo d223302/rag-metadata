@@ -2,6 +2,7 @@ data.pkl
 utils/__pycache__/
 results/
 results_fake/
+results_fake_test/
 trl
 data/fake_knowledge_with_evidence.json
 data/fake_knowledge.json
