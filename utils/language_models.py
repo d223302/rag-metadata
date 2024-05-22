@@ -201,7 +201,7 @@ class TransformerLM(LM):
             self.cache_dict[prompt] = prediction
             return prediction
         
-    def full_generate(self, user_prompt, max_new_tokens = 256):
+    def full_generate(self, user_prompt, max_new_tokens = 512):
         if hasattr(self.tokenizer, "apply_chat_template"):
             dialogue = [
                 {"role": "user", "content": user_prompt.strip()},
@@ -261,9 +261,15 @@ class OpenAIModel(LM):
         else:
             raise ValueError(f"Unknown model name: {self.model_name}")
         
-    def generate(self, user_prompt):
+    def generate(self, user_prompt, system_prompt = None):
         #  print(user_prompt)
-        messages = [{"role" : "user", "content" : user_prompt}]
+        if system_prompt is not None:
+            messages = [
+                {"role" : "system", "content" : system_prompt}, 
+                {"role" : "user", "content" : user_prompt}
+            ]
+        else:
+            messages = [{"role" : "user", "content" : user_prompt}]
         key = user_prompt
         if key in self.cache_dict:
             return self.cache_dict[key]

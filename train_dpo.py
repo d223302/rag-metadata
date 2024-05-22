@@ -8,7 +8,7 @@ max_seq_length = 8192 # Supports automatic RoPE Scaling, so choose any number.
 
 # Load model
 model, tokenizer = FastLanguageModel.from_pretrained(
-    model_name = "allenai/tulu-2-dpo-7b",
+    model_name = "allenai/tulu-2-dpo-13b",
     max_seq_length = max_seq_length,
     dtype = None, # None for auto detection. Float16 for Tesla T4, V100, Bfloat16 for Ampere+
     load_in_4bit = True, # Use 4bit quantization to reduce memory usage. Can be False.
@@ -27,7 +27,7 @@ model = FastLanguageModel.get_peft_model(
     random_state = 42,
 )
 
-train_dataset = json.load(open("data/dpo_train.json", 'r'))
+train_dataset = json.load(open("data/dpo_test.json", 'r'))
 train_dataset = Dataset.from_dict(train_dataset)
 
 
@@ -47,9 +47,9 @@ dpo_trainer = DPOTrainer(
         logging_steps = 1,
         optim = "adamw_8bit",
         seed = 42,
-        output_dir = "dpo_output",
+        output_dir = "dpo_13b_output",
     ),
     beta = 0.1,
 )
 dpo_trainer.train()
-dpo_trainer.save_model("dpo_output")
+dpo_trainer.save_model("dpo_13b_output")
