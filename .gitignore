@@ -9,5 +9,6 @@ data/fake_knowledge.json
 data/fake_knowledge_with_evidence_test.json
 data/fake_knowledge_test.json
 dpo_output
+dpo_13b_output
 .cache/
 
