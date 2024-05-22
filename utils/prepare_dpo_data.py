@@ -233,7 +233,7 @@ def main(args):
         "chosen": [],
         "rejected": [],
     }
-    result_dir = "../results_fake/generate"
+    result_dir = "../results_fake_test/generate"
     for model in ["Meta-Llama-3-8B-Instruct"]:
         for prompt_template in ["input_date_today"]:
             for favored_stance in ['yes', 'no']:
@@ -244,7 +244,7 @@ def main(args):
                     "input_no_meta_original.json"
                 )
                 dpo_subset = prepare_dpo(
-                    dataset_path = "../data/fake_knowledge_with_evidence_parsed.json",
+                    dataset_path = "../data/fake_knowledge_with_evidence_parsed_test.json",
                     chosen_result_file = os.path.join(result_dir, model, f"{prompt_template}_{favored_stance}.json"),
                     rejected_result_file = rejected_result_file,
                     prompt_template = prompt_template,
@@ -267,7 +267,7 @@ def main(args):
                         "input_no_meta_original.json"
                     )
                     dpo_subset = prepare_dpo(
-                        dataset_path = "../data/fake_knowledge_with_evidence_parsed.json",
+                        dataset_path = "../data/fake_knowledge_with_evidence_parsed_test.json",
                         chosen_result_file = os.path.join(result_dir, model, f"{prompt_template}_{url_modifier}_{favored_stance}.json"),
                         rejected_result_file = rejected_result_file,
                         prompt_template = prompt_template,
@@ -280,7 +280,7 @@ def main(args):
                     dpo_set['chosen'] += dpo_subset['chosen']
                     dpo_set['rejected'] += dpo_subset['rejected']
     
-    with open("../data/dpo_train.json", "w") as f:
+    with open("../data/dpo_test.json", "w") as f:
         json.dump(dpo_set, f)
 
     
