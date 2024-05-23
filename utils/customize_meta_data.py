@@ -63,3 +63,29 @@ def cnn_naturalnews_url(fill_in_dict, favor_stance, keyword_list):
         fill_in_dict["URL_1"] = f"https://www.naturalnews.com/{url_keyword}.html"
         fill_in_dict["URL_2"] = f"https://edition.cnn.com/{url_keyword}"
     return fill_in_dict
+
+def wiki_wordpress_src(fill_in_dict, favor_stance, keyword_list):
+    if len(keyword_list) < 1:
+        print(fill_in_dict)
+        raise ValueError("Please provide two keywords")
+
+    if fill_in_dict["stance_1"] == favor_stance:
+        fill_in_dict["URL_1"] = "Wikipedia"
+        fill_in_dict["URL_2"] = "Wordpress"
+    else:
+        fill_in_dict["URL_1"] = "Wordpress"
+        fill_in_dict["URL_2"] = "Wikipedia"
+    return fill_in_dict
+
+def cnn_naturalnews_src(fill_in_dict, favor_stance, keyword_list):
+    if len(keyword_list) < 1:
+        print(fill_in_dict)
+        raise ValueError("Please provide two keywords")
+
+    if fill_in_dict["stance_1"] == favor_stance:
+        fill_in_dict["URL_1"] = "CNN"
+        fill_in_dict["URL_2"] = "Naturalnews"
+    else:
+        fill_in_dict["URL_1"] = "Naturalnews"
+        fill_in_dict["URL_2"] = "CNN"
+    return fill_in_dict

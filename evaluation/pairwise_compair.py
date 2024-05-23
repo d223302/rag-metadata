@@ -352,7 +352,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--prompt_template",
         type = str,
-        choices = ["input_no_meta", "input_date", "input_url", "input_url_1", "input_url_2", "input_rank", "input_emphasize_url", "input_date_today", "input_emphasize_wiki_url", "input_emphasize_wiki_url_1", "input_emphasize_wiki_url_2", "wiki_wordpress_url", "cnn_naturalnews_url"],
+        choices = ["input_no_meta", "input_date", "input_url", "input_url_1", "input_url_2", "input_rank", "input_emphasize_url", "input_date_today", "input_emphasize_wiki_url", "input_emphasize_wiki_url_1", "input_emphasize_wiki_url_2", "input_emphasize_src"],
         default = "input_no_meta",
     )
     parser.add_argument(
@@ -391,8 +391,8 @@ if __name__ == "__main__":
 '''
 Usage: 
 python3 pairwise_compair.py \
-    --dataset_path ../data/fake_knowledge_with_evidence_parsed_test.json \
-    --result_prefix ../results_fake_test/generate \
+    --dataset_path ../data/fake_knowledge_with_evidence_parsed.json \
+    --result_prefix ../results_fake/generate \
     --output_dir evaluation_results \
     --prompt_template input_emphasize_url \
     --favored_stance no \
