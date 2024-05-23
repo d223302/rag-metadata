@@ -18,6 +18,14 @@ df = {
     'disagree_ratio': [],
 }
 
+paired_df = {
+    'model': [],
+    'prompt_template': [],
+    'stereo': [],
+    'anti_stero': [],
+    'no_change': [],
+}
+
 model_name_map = {
     "Meta-Llama-3-8B-Instruct": "Llama-3-8B",
     "Meta-Llama-3-70B-Instruct": "Llama-3-70B",
@@ -33,6 +41,10 @@ model_name_map = {
 for model in model_list:
     # for prompt_template in ["input_no_meta", "input_date", "input_date_today", 'input_rank']:
     for prompt_template in ['input_emphasize_url_cnn_naturalnews_url', 'input_emphasize_url_wiki_wordpress_url', 'input_url_cnn_naturalnews_url', 'input_url_wiki_wordpress_url']:
+        paired_results = {
+            'yes': [],
+            'no': [],
+        }
         for stance in ['yes', 'no']:
             json_file = os.path.join(
                 result_path,
@@ -61,23 +73,38 @@ for model in model_list:
             preference = []
             for v in verdict:
                 if v[0] != v[1]:
-                    disagree_ratio.append(1)
+                    preference.append(0.5)
                     continue
-                else:
-                    disagree_ratio.append(0)
                 if v[0] == 'Yes':
                     preference.append(1)
                 else:
                     preference.append(0)
 
+            paired_results[stance] = preference
             preference = np.mean(preference)
-            disagree_ratio = np.mean(disagree_ratio)
 
             df['model'].append(model_name_map[model])
             df['prompt_template'].append(prompt_template)
             df['stance'].append(stance)
             df['preference'].append(preference)
             df['disagree_ratio'].append(disagree_ratio)
+        
+        # Calculate the flip ratio and consistent ratio
+        flip_ratio = []
+        for i in range(len(paired_results['yes'])):
+            if paired_results['yes'][i] != 0.5 and paired_results['no'][i] != 0.5:
+                if paired_results['yes'][i] == 1 and paired_results['no'][i] == 0:
+                    flip_ratio.append('stereo')
+                if paired_results['yes'][i] == 0 and paired_results['no'][i] == 1:
+                    flip_ratio.append('anti-stereo')
+                else:
+                    flip_ratio.append('no_change')
+        paired_df['model'].append(model_name_map[model])
+        paired_df['prompt_template'].append(prompt_template)
+        paired_df['stereo'].append(flip_ratio.count('stereo') / (len(flip_ratio) + 1e-10))
+        paired_df['anti_stero'].append(flip_ratio.count('anti-stereo') / (len(flip_ratio) + 1e-10))
+        paired_df['no_change'].append(flip_ratio.count('no_change') / (len(flip_ratio) + 1e-10))
+
 
 df = pd.DataFrame(df)
 # Format the dataframe. The row is model. The column should be grouped by the prompt template and stance. Each cell is the preference
@@ -86,3 +113,12 @@ df = df.pivot_table(index='model', columns=['prompt_template', 'stance'], values
 #Order the prompt template
 # df = df[['input_no_meta', 'input_url', 'input_url_1', 'input_emphasize_url', 'input_emphasize_wiki_url_1']]
 print(df)
+
+paired_df = pd.DataFrame(paired_df)
+paired_df['combined'] = paired_df.apply(lambda row: f"{row['stereo']:.2f}/{row['anti_stero']:.2f}/{row['no_change']:.2f}", axis=1)
+# Delete the original columns
+paired_df = paired_df.drop(columns=['stereo', 'anti_stero', 'no_change'])
+# Pivot the DataFrame
+paired_df = paired_df.pivot(index='model', columns='prompt_template', values=['combined'])
+
+print(paired_df)

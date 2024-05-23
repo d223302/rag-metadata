@@ -36,7 +36,7 @@
 #  done
 
 
-for model in "meta-llama/Llama-2-7b-chat-hf" "meta-llama/Llama-2-70b-chat-hf"; do
+for model in "meta-llama/Meta-Llama-3-70B-Instruct"; do
     for prompt_template in "input_date" "input_date_today" "input_rank" "input_no_meta"; do
         for modify_meta_data in 1 0; do
             if [[ $modify_meta_data == 1 ]]; then
@@ -62,7 +62,7 @@ for model in "meta-llama/Llama-2-7b-chat-hf" "meta-llama/Llama-2-70b-chat-hf"; d
     done
 done
 
-#   for model in  "allenai/tulu-2-dpo-70b" "meta-llama/Llama-2-70b-chat-hf"; do
+#   for model in "meta-llama/Meta-Llama-3-8B-Instruct"; do
 #       for url_modifier in "wiki_wordpress_url" "cnn_naturalnews_url"; do
 #         for prompt_template in "input_url" "input_emphasize_url"; do
 #           for modify_meta_data in 1; do
