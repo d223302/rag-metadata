@@ -36,8 +36,8 @@
 #  done
 
 
-for model in "meta-llama/Meta-Llama-3-70B-Instruct"; do
-    for prompt_template in "input_date" "input_date_today" "input_rank" "input_no_meta"; do
+for model in "meta-llama/Meta-Llama-3-8B-Instruct"; do
+    for prompt_template in "input_rank_no_google"; do
         for modify_meta_data in 1 0; do
             if [[ $modify_meta_data == 1 ]]; then
                 for favored_stance in "yes" "no"; do

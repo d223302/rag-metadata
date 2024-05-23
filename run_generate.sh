@@ -27,9 +27,9 @@ conda activate unsloth_env
 #  
 
 
-for model in "dpo_output"; do
-    for prompt_template in "input_date" "input_date_today"; do
-        for modify_meta_data in 0; do
+for model in "meta-llama/Llama-2-70b-chat-hf"; do
+    for prompt_template in "input_rank_no_google"; do
+        for modify_meta_data in 1; do
             if [[ $modify_meta_data == 1 ]]; then
                 for favored_stance in "yes" "no"; do
                     python3 main.py \
@@ -57,7 +57,7 @@ done
 
 
 
-# for model in "dpo_output"; do
+# for model in "allenai/tulu-2-dpo-7b"; do
 #     for url_modifier in 'cnn_naturalnews_url' 'wiki_wordpress_url'; do
 #       for prompt_template in "input_emphasize_url"; do
 #         for modify_meta_data in 1; do
