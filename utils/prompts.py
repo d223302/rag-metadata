@@ -305,3 +305,11 @@ Website 2 is from {URL_2}.
 
 Using these two sources, answer the following question: "{search_query}"
 Use only the information in the above text to answer the question. Answer with only "Yes" or "No". Do not answer with anything other than "Yes" or "No".'''
+
+    vision_prompts = [
+        '''Here are the screenshots of two websites:
+Website 1:''',
+        '''Website 2:''',
+        '''Using these two websites, answer the following question: "{search_query}"
+Use only the information in the above text to answer the question. Answer with only "Yes" or "No". Do not answer with anything other than "Yes" or "No".'''
+    ]
