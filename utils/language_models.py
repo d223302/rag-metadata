@@ -10,9 +10,13 @@ from filelock import FileLock
 from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
 import torch
 import signal
+import base64
 
 logger = logging.getLogger(__name__)
 
+def encode_image(image_path):
+    with open(image_path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode('utf-8')
 
 class LM():
     def __init__(self, model_name, cache_file, sampling_params, **kwargs):
@@ -252,6 +256,9 @@ class OpenAIModel(LM):
         if "3.5" in self.model_name:
             self.input_token_cost = 1.50 / 1_000_000
             self.output_token_cost = 2.00 / 1_000_000
+        elif 'gpt-4o' in self.model_name:
+            self.input_token_cost = 5 / 1_000_000
+            self.output_token_cost = 15 / 1_000_000
         elif "gpt-4-turbo" in self.model_name:
             self.input_token_cost = 10.0 / 1_000_000
             self.output_token_cost = 30.0 / 1_000_000
@@ -285,6 +292,66 @@ class OpenAIModel(LM):
             self.cache_dict[key] = response
             self.save_cache()
             return response
+
+    def generate_with_img(
+        self,
+        text_pre,
+        img_1,
+        text_middle,
+        img_2,
+        text_post,
+        img_type = 'png',
+        system_prompt = None,
+    ):
+        if system_prompt is not None:
+            raise ValueError("system_prompt is not supported for generate_with_img")
+        
+        base64_img_1 = encode_image(img_1)
+        base64_img_2 = encode_image(img_2)
+
+        messages = [
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": text_pre,
+                    },
+                    {
+                        "type": "image_url",
+                        "url": f"data:image/{img_type};base64,{base64_img_1}",
+                    },
+                    {
+                        "type": "text",
+                        "text": text_middle,
+                    },
+                    {
+                        "type": "image_url",
+                        "url": f"data:image/{img_type};base64,{base64_img_2}",
+                    },
+                    {
+                        "type": "text",
+                        "text": text_post,
+                    },
+                ]
+            } 
+        ]
+        key = " ".join([text_pre, img_1, text_middle, img_2, text_post])
+        if key in self.cache_dict:
+            return self.cache_dict[key]
+        else:
+            outputs = self.llm.chat.completions.create(
+                model = self.model_name,
+                messages = messages,
+                **self.sampling_params,
+            )
+            self.input_token_count += outputs.usage.prompt_tokens
+            self.output_token_count += outputs.usage.completion_tokens
+            response = outputs.choices[0].message.content
+            self.cache_dict[key] = response
+            self.save_cache()
+            return response
+
 
 safety_settings = [
     {
@@ -343,7 +410,9 @@ class ClaudeLLM(LM):
             self.api_key = f.readlines()[0].strip()
         self.llm = anthropic.Anthropic(api_key = self.api_key)
         self.sampling_params.pop("seed")
-    
+        self.sampling_params.pop("temperature")
+        self.sampling_params.pop("top_p")
+
         if "claude-3-opus" in self.model_name:
             self.input_token_cost = 15 / 1_000_000
             self.output_token_cost = 75 / 1_000_000
@@ -377,6 +446,77 @@ class ClaudeLLM(LM):
                 break
 
             return response
+    
+    def generate_with_img(
+        self,
+        text_pre,
+        img_1,
+        text_middle,
+        img_2,
+        text_post,
+        img_type = 'image/png',
+        system_prompt = None,
+    ):
+        if system_prompt is not None:
+            raise ValueError("system_prompt is not supported for generate_with_img")
+        
+        base64_img_1 = encode_image(img_1)
+        base64_img_2 = encode_image(img_2)
+        messages = [
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": text_pre,
+                    },
+                    {
+                        "type": "image",
+                        "source": {
+                            "type": "base64",
+                            "media_type": img_type,
+                            "data": base64_img_1,
+                        },
+                        
+                    },
+                    {
+                        "type": "text",
+                        "text": text_middle,
+                    },
+                    {
+                        "type": "image",
+                        "source": {
+                            "type": "base64",
+                            "media_type": img_type,
+                            "data": base64_img_2,
+                        },
+                        
+                    },
+                    {
+                        "type": "text",
+                        "text": text_post,
+                    },
+                ]
+            } 
+        ]
+        key = " ".join([text_pre, img_1, text_middle, img_2, text_post])
+        if key in self.cache_dict:
+            return self.cache_dict[key]
+        else:
+            outputs = self.llm.messages.create(
+                model = self.model_name,
+                messages = messages,
+                **self.sampling_params,
+            )
+            self.input_token_count += outputs.usage.input_tokens
+            self.output_token_count += outputs.usage.output_tokens
+            response = outputs.content[0].text
+            self.cache_dict[key] = response
+            self.save_cache()
+            return response
+
+    def full_generate_with_img(self, **kwargs):
+        return self.generate_with_img(**kwargs)
 
 def create_llm(model_name, cache_file, sampling_params, **kwargs):
     if "gemini" in model_name:

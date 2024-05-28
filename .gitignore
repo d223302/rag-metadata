@@ -3,11 +3,13 @@ utils/__pycache__/
 results/
 results_fake/
 results_fake_test/
+results_vision_fake/
 trl
 data/fake_knowledge_with_evidence.json
 data/fake_knowledge.json
 data/fake_knowledge_with_evidence_test.json
 data/fake_knowledge_test.json
+data/imgs
 dpo_output
 dpo_13b_output
 .cache/
