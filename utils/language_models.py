@@ -301,6 +301,9 @@ class OpenAIModel(LM):
             self.cache_dict[key] = response
             self.save_cache()
             return response
+    
+    def full_generate(self, user_prompt, system_prompt = None):
+        return self.generate(user_prompt, system_prompt)
 
     def generate_with_img(
         self,
