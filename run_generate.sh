@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-source ~/.bashrc
-conda activate unsloth_env
+# source ~/.bashrc
+# conda activate unsloth_env
 #  for model in "allenai/tulu-2-dpo-7b"; do
 #      for prompt_template in "input_date" "input_date_today" "input_url" "input_rank" "input_emphasize_url" "input_emphasize_wiki_url"; do
 #          for modify_meta_data in 0 1; do

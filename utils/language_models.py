@@ -7,7 +7,7 @@ from colorama import Fore, Style
 import anthropic
 import logging
 from filelock import FileLock
-from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
+from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig, BitsAndBytesConfig
 import torch
 import signal
 import base64
@@ -137,7 +137,15 @@ class TransformerLM(LM):
             )
 
         except ImportError:
-            self.llm = AutoModelForCausalLM.from_pretrained(self.model_name, device_map = 'auto')
+            # quantization_config = BitsAndBytesConfig(
+            #    load_in_4bit=True,
+            #    bnb_4bit_compute_dtype=torch.bfloat16
+            # )
+            self.llm = AutoModelForCausalLM.from_pretrained(
+                self.model_name,
+                load_in_4bit = True, 
+                device_map = 'auto'
+            )
             self.tokenizer = AutoTokenizer.from_pretrained(self.model_name)
             self.tokenizer.use_default_system_prompt = False
 
@@ -219,9 +227,9 @@ class TransformerLM(LM):
 
         past_key_values = None
         # First pass to get the CoT answer
-        if prompt in self.cache_dict:
-            return self.cache_dict[prompt]
-        else:
+        # if prompt in self.cache_dict:
+        #     return self.cache_dict[prompt]
+        if True:
             input_tokens = self.tokenizer(prompt, return_tensors = "pt", add_special_tokens = False).input_ids
             # TODO: Since we only care about the probability of Yes/No, we can use the last token as the output
 
