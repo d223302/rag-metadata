@@ -223,7 +223,6 @@ def main(args):
         if i == 0:
           print(permutation)
         
-        exit() 
         # Save cache
         if i % 5 == 0:
             llm.save_cache()

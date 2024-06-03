@@ -127,10 +127,10 @@ class TransformerLM(LM):
         try:
             from unsloth import FastLanguageModel
             max_seq_length = 8192 # Supports automatic RoPE Scaling, so choose any number.
-
+            print(f"The model name is: {self.model_name}")
             # Load model
             self.llm, self.tokenizer = FastLanguageModel.from_pretrained(
-                model_name = "dpo_output",
+                model_name = self.model_name,
                 max_seq_length = max_seq_length,
                 dtype = None, # None for auto detection. Float16 for Tesla T4, V100, Bfloat16 for Ampere+
                 load_in_4bit = True, # Use 4bit quantization to reduce memory usage. Can be False.
@@ -227,9 +227,9 @@ class TransformerLM(LM):
 
         past_key_values = None
         # First pass to get the CoT answer
-        # if prompt in self.cache_dict:
-        #     return self.cache_dict[prompt]
-        if True:
+        if prompt in self.cache_dict:
+            return self.cache_dict[prompt]
+        else:
             input_tokens = self.tokenizer(prompt, return_tensors = "pt", add_special_tokens = False).input_ids
             # TODO: Since we only care about the probability of Yes/No, we can use the last token as the output
 
