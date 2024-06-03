@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-source ~/.bashrc
-conda activate unsloth_env
+# source ~/.bashrc
+# conda activate vllm
 #  for model in "allenai/tulu-2-dpo-7b"; do
 #      for prompt_template in "input_date" "input_date_today" "input_url" "input_rank" "input_emphasize_url" "input_emphasize_wiki_url"; do
 #          for modify_meta_data in 0 1; do
@@ -57,9 +57,9 @@ conda activate unsloth_env
 
 
 
-for model in "meta-llama/Meta-Llama-3-8B-Instruct"; do
-    for url_modifier in 'cnn_naturalnews_src' 'wiki_wordpress_src'; do
-      for prompt_template in "input_emphasize_src"; do
+for model in "meta-llama/Llama-2-13b-chat-hf"; do
+    for url_modifier in 'cnn_naturalnews_url' 'wiki_wordpress_url'; do
+      for prompt_template in "input_emphasize_url"; do
         for modify_meta_data in 1; do
             if [[ $modify_meta_data == 1 ]]; then
                 for favored_stance in "yes" "no"; do
