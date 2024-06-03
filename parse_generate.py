@@ -60,7 +60,7 @@ model_name_map = {
 }
 
 for model in model_list:
-    for prompt_template in ["input_no_meta", "input_date", "input_date_today", "input_rank", "input_url", "input_emphasize_url", "input_emphasize_wiki_url"]:
+    for prompt_template in ["input_no_meta", "input_date", "input_date_today", "input_rank", "input_url", "input_emphasize_url", "input_emphasize_wiki_url", "input_emphasize_url_wiki_wordpress_url", "input_emphasize_url_cnn_naturalnews_url"]:
         for stance in ['yes', 'no']:
             json_file = os.path.join(
                 result_path,
