@@ -8,6 +8,7 @@ import anthropic
 import logging
 from filelock import FileLock
 from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig, BitsAndBytesConfig
+import pathlib
 import torch
 import signal
 import base64
@@ -403,6 +404,23 @@ class GeminiModel(LM):
         self.llm = genai.GenerativeModel(self.model_name)
         self.sampling_params.pop("seed")
 
+        # TODO: Check the generation configuration
+        self.generation_config = genai.GenerationConfig(
+            max_output_tokens = self.sampling_params["max_tokens"],
+            temperature = self.sampling_params["temperature"],
+            top_p = self.sampling_params["top_p"],
+        )
+
+        if "gemini-1.5-pro" in self.model_name:
+            self.input_token_cost = 3.50 / 1_000_000
+            self.output_token_cost = 10.50 / 1_000_000
+        elif "gemini-1.5-flash":
+            self.input_token_cost = 0.35 / 1_000_000
+            self.output_token_cost = 1.05 / 1_000_000
+        elif "gemini-1.0-pro":
+            self.input_token_cost = 0.50 / 1_000_000
+            self.output_token_cost = 1.50 / 1_000_000
+
     def generate(self, user_prompt):
         contents = []
         contents.append({"role" : "user", "parts" :user_prompt})
@@ -412,7 +430,7 @@ class GeminiModel(LM):
             return self.cache_dict[key]
         else:
             outputs = self.llm.generate_content(
-                contents = contents,
+                content = contents,
                 safety_settings = safety_settings,
                 generation_config = genai.GenerationConfig(**self.sampling_params),
             )
@@ -420,6 +438,67 @@ class GeminiModel(LM):
             response = outputs.text
             self.cache_dict[key] = response
             return response
+    
+    def generate_with_img(
+        self,
+        text_pre,
+        img_1,
+        text_middle,
+        img_2,
+        text_post,
+        img_type = 'image/png',
+        system_prompt = None,
+    ):
+        if system_prompt is not None:
+            self.llm = genai.GenerativeModel(
+                model_name = self.model_name, 
+                system_instruction = system_prompt
+            )
+        
+        base64_img_1 = pathlib.Path(img_1).read_bytes()
+        base64_img_2 = pathlib.Path(img_2).read_bytes()
+        contents = [
+            text_pre,
+            {
+                "mime_type": img_type,
+                "data": base64_img_1,
+            },
+            text_middle,
+            {
+                "mime_type": img_type,
+                "data": base64_img_2,
+            },
+            text_post,
+        ]
+        key = " ".join([text_pre, img_1, text_middle, img_2, text_post])
+        if key in self.cache_dict:
+            return self.cache_dict[key]
+        else:
+            while True:
+                try:
+                    outputs = self.llm.generate_content(
+                        contents = contents,
+                        safety_settings = safety_settings,
+                        generation_config = self.generation_config,
+                    )
+                    if outputs.candidates:
+                        if outputs.candidates[0].content.parts[0]:
+                            response = outputs.candidates[0].content.parts[0].text
+                            break
+                        else:
+                            logger.error(f"Error: {outputs}")
+                            time.sleep(5)
+                except Exception as e:
+                    logger.error(f"Error: {e}, retrying...")
+                    time.sleep(5)
+
+            self.input_token_count += self.llm.count_tokens(contents).total_tokens
+            self.output_token_count += self.sampling_params["max_tokens"]
+            self.cache_dict[key] = response
+            self.save_cache()
+            return response
+
+
         
 class ClaudeLLM(LM):
     def __init__(self, claude_api_key, **kwargs):
