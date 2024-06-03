@@ -1,3 +1,83 @@
+simple_html = '''<h1>{TITLE}</h1>  
+<span style="font-size: 1.2em">{TEXT}</span>'''
+
+pretty_html = '''<!DOCTYPE HTML>
+<!--
+	TXT by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>No Sidebar - TXT by HTML5 UP</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<body class="is-preload">
+		<div id="page-wrapper">
+
+			<!-- Header -->
+				<header id="header">
+					<div class="logo container">
+						<div>
+							<p>{TITLE}</p>
+						</div>
+					</div>
+				</header>
+
+			<!-- Nav -->
+				<nav id="nav">
+					<ul>
+						<li><a href="index.html">Home</a></li>
+						<li class="current"><a href="no-sidebar.html">More Information</a></li>
+						<li><a href="left-sidebar.html">Contact Us</a></li>
+					</ul>
+				</nav>
+
+			<!-- Main -->
+				<section id="main">
+					<div class="container">
+						<div class="row">
+							<div class="col-12">
+								<div class="content">
+
+									<!-- Content -->
+
+										<article class="box page-content">
+
+
+											<section>
+												<p>
+													{TEXT}
+												</p>
+											</section>
+										</article>
+
+								</div>
+							</div>
+							
+						</div>
+					</div>
+				</section>
+
+			<!-- Footer -->
+		</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.dropotron.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
+'''
+
+
 def change_url(fill_in_dict, url_prefix, favor_stance):
     if fill_in_dict["stance_1"] == favor_stance:
         fill_in_dict["URL_1"] = url_prefix + fill_in_dict["URL_1"].strip().strip('/').split('/')[-1]
@@ -88,4 +168,25 @@ def cnn_naturalnews_src(fill_in_dict, favor_stance, keyword_list):
     else:
         fill_in_dict["URL_1"] = "Naturalnews"
         fill_in_dict["URL_2"] = "CNN"
+    return fill_in_dict
+
+def pretty_simple_html(fill_in_dict, favor_stance):
+    if fill_in_dict["stance_1"] == favor_stance:
+        fill_in_dict["HTML_1"] = pretty_html.format(
+            TITLE=fill_in_dict["TITLE_1"],
+            TEXT=fill_in_dict["TEXT_1"]
+        )
+        fill_in_dict["HTML_2"] = simple_html.format(
+            TITLE=fill_in_dict["TITLE_2"],
+            TEXT=fill_in_dict["TEXT_2"]
+        )
+    else:
+        fill_in_dict["HTML_1"] = simple_html.format(
+            TITLE=fill_in_dict["TITLE_1"],
+            TEXT=fill_in_dict["TEXT_1"]
+        )
+        fill_in_dict["HTML_2"] = pretty_html.format(
+            TITLE=fill_in_dict["TITLE_2"],
+            TEXT=fill_in_dict["TEXT_2"]
+        )
     return fill_in_dict
