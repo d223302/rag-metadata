@@ -44,17 +44,19 @@ model_name_map = {
 }
 
 for model in model_list:
-    # for prompt_template in ["input_no_meta", "input_date", "input_date_today", 'input_rank']:
-    for prompt_template in ['input_emphasize_url_cnn_naturalnews_url', 'input_emphasize_url_wiki_wordpress_url', 'input_url_cnn_naturalnews_url', 'input_url_wiki_wordpress_url']:
+    for prompt_template in ['vision_prompts', 'vision_prompts_with_text']:
         paired_results = {
-            'yes': [],
-            'no': [],
+            'yes_pretty_no_pretty': [],
+            'yes_pretty_no_simple': [],
+            'yes_simple_no_pretty': [],
+            'yes_simple_no_simple': [],
         }
-        for stance in ['yes', 'no']:
+        for counterfactual in paired_results.keys():
             json_file = os.path.join(
                 result_path,
                 model,
-                f"{prompt_template}_{stance}.json"
+                prompt_template,
+                f"{counterfactual}.json"
             )
             
             if not os.path.exists(json_file):
@@ -65,13 +67,8 @@ for model in model_list:
             except json.decoder.JSONDecodeError:
                 print(f"Error in {json_file}")
                 continue
-            json_prompt_template = data['args']['prompt_template']
-            json_modify_meta_data = data['args']['modify_meta_data']
-            json_stance = data['args']['favored_stance']
 
-            if prompt_template != "input_no_meta":
-                if stance != 'original' and not json_modify_meta_data:
-                    continue
+            # json_prompt_template = data['args']['prompt_template']
             # print(json_file)
             verdict = data['data']
             disagree_ratio = []
@@ -85,30 +82,14 @@ for model in model_list:
                 else:
                     preference.append(0)
 
-            paired_results[stance] = preference
+            paired_results[counterfactual] = preference
             preference = np.mean(preference)
 
             df['model'].append(model_name_map[model])
             df['prompt_template'].append(prompt_template)
-            df['stance'].append(stance)
+            df['stance'].append(counterfactual)
             df['preference'].append(preference)
             df['disagree_ratio'].append(disagree_ratio)
-        
-        # Calculate the flip ratio and consistent ratio
-        flip_ratio = []
-        for i in range(len(paired_results['yes'])):
-            if paired_results['yes'][i] != 0.5 and paired_results['no'][i] != 0.5:
-                if paired_results['yes'][i] == 1 and paired_results['no'][i] == 0:
-                    flip_ratio.append('stereo')
-                if paired_results['yes'][i] == 0 and paired_results['no'][i] == 1:
-                    flip_ratio.append('anti-stereo')
-                else:
-                    flip_ratio.append('no_change')
-        paired_df['model'].append(model_name_map[model])
-        paired_df['prompt_template'].append(prompt_template)
-        paired_df['stereo'].append(flip_ratio.count('stereo') / (len(flip_ratio) + 1e-10))
-        paired_df['anti_stero'].append(flip_ratio.count('anti-stereo') / (len(flip_ratio) + 1e-10))
-        paired_df['no_change'].append(flip_ratio.count('no_change') / (len(flip_ratio) + 1e-10))
 
 
 df = pd.DataFrame(df)
