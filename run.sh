@@ -62,7 +62,7 @@
 #      done
 #  done
 
-for model in "meta-llama/Meta-Llama-3-8B-Instruct" "meta-llama/Llama-2-7b-chat-hf" "meta-llama/Llama-2-13b-chat-hf" "meta-llama/Llama-2-70b-chat-hf" "allenai/tulu-2-dpo-7b" "allenai/tulu-2-dpo-70b" "meta-llama/Meta-Llama-3-70B-Instruct"; do
+for model in "meta-llama/Meta-Llama-3-8B-Instruct" "meta-llama/Llama-2-7b-chat-hf" "meta-llama/Llama-2-13b-chat-hf" "allenai/tulu-2-dpo-7b"; do
     for url_modifier in "wiki_wordpress_src" "cnn_naturalnews_src"; do
       for prompt_template in "input_emphasize_src"; do
         for modify_meta_data in 1; do
