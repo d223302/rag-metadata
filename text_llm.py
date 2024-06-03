@@ -222,6 +222,8 @@ def main(args):
         #  # The following are for debugging
         if i == 0:
           print(permutation)
+        
+        exit() 
         # Save cache
         if i % 5 == 0:
             llm.save_cache()
