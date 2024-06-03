@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from utils.prompts import prompt_class
 from utils.language_models import create_llm
-from utils.customize_meta_data import change_url, change_ranking, change_date , change_url_to_wiki, wiki_wordpress_url, cnn_naturalnews_url, wiki_wordpress_src, cnn_naturalnews_src
+from utils.customize_meta_data import change_url, change_ranking, change_date , change_url_to_wiki, wiki_wordpress_url, cnn_naturalnews_url, wiki_wordpress_src, cnn_naturalnews_src, pretty_simple_html
 import logging
 import argparse
 import json
@@ -44,7 +44,7 @@ logging.getLogger("utils.language_models").setLevel(logging.INFO)
 
 def check_args(args):
     if args.modify_meta_data:
-        if args.prompt_template not in ["input_date", "input_date_today", "input_url", "input_url_1", "input_url_2", "input_rank", "input_rank_no_google", "input_emphasize_url", "input_emphasize_wiki_url", "input_emphasize_wiki_url_1", "input_emphasize_wiki_url_2", "wiki_wordpress_url", "cnn_naturalnews_url", "input_emphasize_src"]:
+        if args.prompt_template not in ["input_date", "input_date_today", "input_url", "input_rank", "input_rank_no_google", "input_emphasize_url", "input_emphasize_wiki_url", "wiki_wordpress_url", "cnn_naturalnews_url", "input_emphasize_src", 'input_html']:
             logger.info("Please select a valid prompt template that has a meta data field.")
             exit()
     else:
@@ -168,6 +168,12 @@ def main(args):
                         args.favored_stance, 
                         "2024-04-01", 
                         "2020-04-01",
+                    )
+                if 'html' in args.prompt_template:
+                    assert 'html' in args.url_modifier, f"The url modifier {args.url_modifier} does not match the prompt template {args.prompt_template}"
+                    fill_in_dict = globals()[args.url_modifier](
+                        fill_in_dict,
+                        args.favored_stance,
                     )
                 if 'url' in args.prompt_template or 'src' in args.prompt_template:
                     if args.url_modifier != "":
@@ -311,7 +317,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--prompt_template",
         type = str,
-        choices = ["input_no_meta", "input_date", "input_url", "input_url_1", "input_url_2", "input_rank", "input_rank_no_google", "input_emphasize_url", "input_date_today", "input_emphasize_wiki_url", "input_emphasize_wiki_url_1", "input_emphasize_wiki_url_2", "wiki_wordpress_url", "cnn_naturalnews_url", "input_emphasize_src"],
+        choices = ["input_no_meta", "input_date", "input_url", "input_url_1", "input_url_2", "input_rank", "input_rank_no_google", "input_emphasize_url", "input_date_today", "input_emphasize_wiki_url", "input_emphasize_wiki_url_1", "input_emphasize_wiki_url_2", "wiki_wordpress_url", "cnn_naturalnews_url", "input_emphasize_src", "input_html"],
         default = "input_no_meta",
     )
     parser.add_argument(
