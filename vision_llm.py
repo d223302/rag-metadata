@@ -64,7 +64,8 @@ def main(args):
     args.output_dir = os.path.join(
         args.output_dir,
         'generate' if args.generation else 'classify',
-        f"{args.model_name.split('/')[-1]}"
+        f"{args.model_name.split('/')[-1]}",
+        args.prompt_template,
     )
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir, exist_ok=True)
@@ -107,14 +108,38 @@ def main(args):
         '''
         question = instance['search_query']
 
+        # Sample two documents with different stances
+        yes_index = [j for j in range(len(instance['stance'])) if instance['stance'][j] == 'yes']
+        no_index = [j for j in range(len(instance['stance'])) if instance['stance'][j] == 'no']
+        if len(yes_index) == 0 or len(no_index) == 0:
+            continue
+        yes_index = random.choice(yes_index)
+        no_index = random.choice(no_index)
+
         img_1 = f"{args.image_dir}/yes_{args.yes_html_template}_{i}.png"
         img_2 = f"{args.image_dir}/no_{args.no_html_template}_{i}.png"
 
         permutation = []
-        for permute_idx, img_set in enumerate([(img_1, img_2), (img_2, img_1)]):
+        for permute_idx, (img_set, doc_set) in enumerate(
+            zip(
+                [(img_1, img_2), (img_2, img_1)],
+                [(yes_index, no_index), (no_index, yes_index)]
+            )
+        ):
             first_img, second_img = img_set
+            doc_1_idx, doc_2_idx = doc_set
             
-            search_engine_input = prompt_class.vision_prompts[:]
+            TITLE_1 = instance['titles'][doc_1_idx]
+            TEXT_1 = instance['text_window'][doc_1_idx]
+            TITLE_2 = instance['titles'][doc_2_idx]
+            TEXT_2 = instance['text_window'][doc_2_idx]
+
+
+            search_engine_input = getattr(prompt_class, args.prompt_template)[:]
+            if args.prompt_template == "vision_prompts_with_text":
+                search_engine_input[0] = search_engine_input[0].format(TITLE_1 = TITLE_1, TEXT_1 = TEXT_1)
+                search_engine_input[1] = search_engine_input[1].format(TITLE_2 = TITLE_2, TEXT_2 = TEXT_2)
+            
             search_engine_input[2] = search_engine_input[2].format(search_query = question)
 
             if args.generation:
@@ -273,6 +298,12 @@ if __name__ == "__main__":
         type = int,
         default = 10,
         help = "The maximum number of tokens to generate",
+    )
+    parser.add_argument(
+        "--prompt_template",
+        choices = ["vision_prompts_with_text", "vision_prompts"],
+        type = str,
+        default = "",
     )
     args = parser.parse_args()
     main(args)

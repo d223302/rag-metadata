@@ -319,7 +319,9 @@ class OpenAIModel(LM):
                     },
                     {
                         "type": "image_url",
-                        "url": f"data:image/{img_type};base64,{base64_img_1}",
+                        "image_url": {
+                            "url": f"data:image/{img_type};base64,{base64_img_1}",
+                        },
                     },
                     {
                         "type": "text",
@@ -327,7 +329,9 @@ class OpenAIModel(LM):
                     },
                     {
                         "type": "image_url",
-                        "url": f"data:image/{img_type};base64,{base64_img_2}",
+                        "image_url": {
+                            "url": f"data:image/{img_type};base64,{base64_img_2}",
+                        },
                     },
                     {
                         "type": "text",
@@ -340,11 +344,17 @@ class OpenAIModel(LM):
         if key in self.cache_dict:
             return self.cache_dict[key]
         else:
-            outputs = self.llm.chat.completions.create(
-                model = self.model_name,
-                messages = messages,
-                **self.sampling_params,
-            )
+            while True:
+                try:
+                    outputs = self.llm.chat.completions.create(
+                        model = self.model_name,
+                        messages = messages,
+                        **self.sampling_params,
+                    )
+                    break
+                except Exception as e:
+                    logger.error(f"Error: {e}, retrying...")
+                    time.sleep(5)
             self.input_token_count += outputs.usage.prompt_tokens
             self.output_token_count += outputs.usage.completion_tokens
             response = outputs.choices[0].message.content
@@ -436,7 +446,6 @@ class ClaudeLLM(LM):
                 outputs = self.llm.messages.create(
                     model = self.model_name,
                     messages = contents,
-                    max_tokens = 10, # TODO: Do not hardcode this
                     **self.sampling_params,
                 )
                 self.input_token_count += outputs.usage.input_tokens
@@ -503,11 +512,17 @@ class ClaudeLLM(LM):
         if key in self.cache_dict:
             return self.cache_dict[key]
         else:
-            outputs = self.llm.messages.create(
-                model = self.model_name,
-                messages = messages,
-                **self.sampling_params,
-            )
+            while True:
+                try:
+                    outputs = self.llm.messages.create(
+                        model = self.model_name,
+                        messages = messages,
+                        **self.sampling_params,
+                    )
+                    break
+                except Exception as e:
+                    logger.error(f"Error: {e}, retrying...")
+                    time.sleep(5)
             self.input_token_count += outputs.usage.input_tokens
             self.output_token_count += outputs.usage.output_tokens
             response = outputs.content[0].text
@@ -515,8 +530,25 @@ class ClaudeLLM(LM):
             self.save_cache()
             return response
 
-    def full_generate_with_img(self, **kwargs):
-        return self.generate_with_img(**kwargs)
+    def full_generate_with_img(
+        self,
+        text_pre,
+        img_1,
+        text_middle,
+        img_2,
+        text_post,
+        img_type = 'image/png',
+        system_prompt = None,
+    ):
+        return self.generate_with_img(
+            text_pre = text_pre,
+            img_1 = img_1,
+            text_middle = text_middle,
+            img_2 = img_2,
+            text_post = text_post,
+            img_type = img_type,
+            system_prompt = system_prompt,
+        )
 
 def create_llm(model_name, cache_file, sampling_params, **kwargs):
     if "gemini" in model_name:
