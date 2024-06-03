@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 for model in gemini-1.5-pro; do
-    for yes_html_template in "simple"; do
-        for no_html_template in "simple"; do
+    for yes_html_template in "simple" "pretty"; do
+        for no_html_template in "simple" "pretty"; do
             for prompt_template in "vision_prompts_with_text"; do
                 python3 vision_llm.py \
                     --model_name "$model" \
