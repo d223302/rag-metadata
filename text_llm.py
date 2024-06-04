@@ -69,6 +69,7 @@ def main(args):
         "temperature": 1.0,
         "top_p": 0.95,
         "seed": args.seed,
+        "max_tokens": args.max_tokens,
     }
 
     # Prepare the output directory
@@ -348,6 +349,12 @@ if __name__ == "__main__":
         type = str,
         default = "",
         help = "The url modifier to use for the input_url prompt template. If empty, the default url modifier is used.",
+    )
+    parser.add_argument(
+        "--max_tokens",
+        type = int,
+        default = 10,
+        help = "The maximum number of tokens to generate",
     )
     args = parser.parse_args()
     main(args)

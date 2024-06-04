@@ -525,7 +525,7 @@ class ClaudeLLM(LM):
         else:
             raise ValueError(f"Unknown model name: {self.model_name}")
         
-    def generate(self, user_prompt):
+    def generate(self, user_prompt, system_prompt = ""):
         contents = []
         contents.append({"role" : "user", "content" : user_prompt})
         key = user_prompt
@@ -536,6 +536,7 @@ class ClaudeLLM(LM):
                 outputs = self.llm.messages.create(
                     model = self.model_name,
                     messages = contents,
+                    system = system_prompt,
                     **self.sampling_params,
                 )
                 self.input_token_count += outputs.usage.input_tokens
@@ -545,6 +546,8 @@ class ClaudeLLM(LM):
                 break
 
             return response
+
+    
     
     def generate_with_img(
         self,
