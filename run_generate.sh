@@ -29,7 +29,7 @@ conda activate vllm
 
 
 for model in "gpt-4-turbo-2024-04-09"; do
-    for prompt_template in "input_date" "input_date_today" "input_url" "input_rank" "input_emphasize_url"; do
+    for prompt_template in "input_date" "input_date_today" "input_rank"; do
         for modify_meta_data in 1 0; do
             if [[ $modify_meta_data == 1 ]]; then
                 for favored_stance in "yes" "no"; do
