@@ -13,6 +13,7 @@ conda activate vllm
 #                          --prompt_template "$prompt_template" \
 #                          --favored_stance "$favored_stance" \
 #                          --modify_meta_data "$modify_meta_data" \
+#                          --max_tokens 512 \
 #                          --generation
 #                  done
 #              else
@@ -20,6 +21,7 @@ conda activate vllm
 #                      --model_name "$model" \
 #                      --prompt_template "$prompt_template" \
 #                      --modify_meta_data "$modify_meta_data" \
+#                      --max_tokens 512 \
 #                      --generation
 #              fi
 #          done
@@ -39,6 +41,7 @@ conda activate vllm
 #                         --prompt_template "$prompt_template" \
 #                         --favored_stance "$favored_stance" \
 #                         --modify_meta_data "$modify_meta_data" \
+#                         --max_tokens 512 \
 #                         --dataset_path data/fake_knowledge_with_evidence_parsed.json \
 #                         --output_dir results_fake
 # 
@@ -46,6 +49,7 @@ conda activate vllm
 #             else
 #                 python3 text_llm.py \
 #                     --generation \
+#                     --max_tokens 512 \
 #                     --model_name "$model" \
 #                     --prompt_template "$prompt_template" \
 #                     --modify_meta_data "$modify_meta_data" \
@@ -66,6 +70,7 @@ for model in "meta-llama/Llama-2-13b-chat-hf"; do
                 for favored_stance in "yes" "no"; do
                     python3 text_llm.py \
                         --generation \
+                         --max_tokens 512 \
                         --url_modifier "$url_modifier" \
                         --model_name "$model" \
                         --prompt_template "$prompt_template" \
@@ -78,6 +83,7 @@ for model in "meta-llama/Llama-2-13b-chat-hf"; do
             else
                 python3 text_llm.py \
                     --generation \
+                    --max_tokens 512 \
                     --url_modifier "$url_modifier" \
                     --model_name "$model" \
                     --prompt_template "$prompt_template" \

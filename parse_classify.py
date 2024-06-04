@@ -4,8 +4,19 @@ import pandas as pd
 import glob
 import os
 import json
+from utils.response_cleaner import normalize_answer
 
-result_path = 'results_vision_fake/classify'
+
+def extract_yes_no_answer(answer):
+    answer = normalize_answer(answer)
+    if 'yes' in answer:
+        return 'yes'
+    elif 'no' in answer:
+        return 'no'
+    else:
+        return 'n/a' # TODO: check if we should return something else
+
+result_path = 'results_fake/classify'
 model_list = [dir.split('/')[-1] for dir in glob.glob(result_path + '/*')]
 print(model_list)
 # 'Meta-Llama-3-8B-Instruct', "Llama-2-7b-chat-hf", "Llama-2-13b-chat-hf", "Llama-2-70b-chat-hf", 
@@ -24,6 +35,7 @@ paired_df = {
     'stereo': [],
     'anti_stero': [],
     'no_change': [],
+    'valid_count': [],
 }
 
 model_name_map = {
@@ -40,12 +52,25 @@ model_name_map = {
     "claude-3-sonnet-20240229": "claude-sonnet",
     "claude-3-opus-20240229": "claude-opus",
     "gpt-4o": "gpt-4o",
+}
 
+
+template_map = {
+    'input_no_meta': 'No Meta',
+    'input_date': 'Date',
+    'input_date_today': 'Date Today',
+    'input_rank': 'Rank',
+    'input_emphasize_url_cnn_naturalnews_url': 'Emph URL CNN/Nat',
+    'input_emphasize_url_wiki_wordpress_url': 'Emph URL Wiki/WP',
+    'input_url_cnn_naturalnews_url': 'URL CNN/Nat',
+    'input_url_wiki_wordpress_url': 'URL Wiki/WP',
+    'input_emphasize_src_cnn_naturalnews_src': 'Emph Src CNN/Nat',
+    'input_emphasize_src_wiki_wordpress_src': 'Emph Src Wiki/WP',
 }
 
 for model in model_list:
     # for prompt_template in ["input_no_meta", "input_date", "input_date_today", 'input_rank']:
-    for prompt_template in ['input_emphasize_url_cnn_naturalnews_url', 'input_emphasize_url_wiki_wordpress_url', 'input_url_cnn_naturalnews_url', 'input_url_wiki_wordpress_url']:
+    for prompt_template in ['input_emphasize_url_cnn_naturalnews_url', 'input_emphasize_url_wiki_wordpress_url', 'input_url_cnn_naturalnews_url', 'input_url_wiki_wordpress_url', 'input_emphasize_src_cnn_naturalnews_src','input_emphasize_src_wiki_wordpress_src', "input_date", "input_date_today", 'input_rank']:
         paired_results = {
             'yes': [],
             'no': [],
@@ -59,7 +84,7 @@ for model in model_list:
             
             if not os.path.exists(json_file):
                 continue
-            print(json_file)
+            print(f"Parsing {json_file}...")
             try: 
                 data = json.load(open(json_file))
             except json.decoder.JSONDecodeError:
@@ -77,52 +102,69 @@ for model in model_list:
             disagree_ratio = []
             preference = []
             for v in verdict:
-                if v[0] != v[1]:
-                    preference.append(0.5)
-                    continue
-                if v[0] == 'Yes':
-                    preference.append(1)
+                v[0] = extract_yes_no_answer(v[0])
+                v[1] = extract_yes_no_answer(v[1])
+                if v[0] == 'n/a' or v[1] == 'n/a':
+                    preference.append(np.nan)
+                    disagree_ratio.append(np.nan)
                 else:
-                    preference.append(0)
+                    if v[0] != v[1]:
+                        preference.append(np.nan)
+                        disagree_ratio.append(1)
+                    else:
+                        if v[0] == 'yes':
+                            preference.append(1)
+                        elif v[0] == 'no':
+                            preference.append(0)
+
 
             paired_results[stance] = preference
-            preference = np.mean(preference)
+            disagree_ratio = np.mean(np.isnan(preference))
+            preference = np.nanmean(preference)
 
             df['model'].append(model_name_map[model])
-            df['prompt_template'].append(prompt_template)
+            df['prompt_template'].append(template_map[prompt_template])
             df['stance'].append(stance)
             df['preference'].append(preference)
             df['disagree_ratio'].append(disagree_ratio)
         
         # Calculate the flip ratio and consistent ratio
         flip_ratio = []
+        if len(paired_results['yes']) != len(paired_results['no']):
+            print(f"Error in {json_file}")
+            continue
         for i in range(len(paired_results['yes'])):
-            if paired_results['yes'][i] != 0.5 and paired_results['no'][i] != 0.5:
+            if (not np.isnan(paired_results['yes'][i])) and (not np.isnan(paired_results['no'][i])):
                 if paired_results['yes'][i] == 1 and paired_results['no'][i] == 0:
                     flip_ratio.append('stereo')
-                if paired_results['yes'][i] == 0 and paired_results['no'][i] == 1:
+                elif paired_results['yes'][i] == 0 and paired_results['no'][i] == 1:
                     flip_ratio.append('anti-stereo')
                 else:
                     flip_ratio.append('no_change')
+            else:
+                flip_ratio.append('n/a')
+        print(f"len(flip_ratio): {len(flip_ratio)}, len(paired_results['yes']): {len(paired_results['yes'])}")
+        print(flip_ratio)
         paired_df['model'].append(model_name_map[model])
-        paired_df['prompt_template'].append(prompt_template)
+        paired_df['prompt_template'].append(template_map[prompt_template])
         paired_df['stereo'].append(flip_ratio.count('stereo') / (len(flip_ratio) + 1e-10))
         paired_df['anti_stero'].append(flip_ratio.count('anti-stereo') / (len(flip_ratio) + 1e-10))
         paired_df['no_change'].append(flip_ratio.count('no_change') / (len(flip_ratio) + 1e-10))
+        paired_df['valid_count'].append(len(flip_ratio) - flip_ratio.count('n/a'))
 
 
 df = pd.DataFrame(df)
 # Format the dataframe. The row is model. The column should be grouped by the prompt template and stance. Each cell is the preference
 
-df = df.pivot_table(index='model', columns=['prompt_template', 'stance'], values=['preference'])
+df = df.pivot_table(index='model', columns=['prompt_template', 'stance'], values=['disagree_ratio'])
 #Order the prompt template
 # df = df[['input_no_meta', 'input_url', 'input_url_1', 'input_emphasize_url', 'input_emphasize_wiki_url_1']]
 print(df)
 
 paired_df = pd.DataFrame(paired_df)
-paired_df['combined'] = paired_df.apply(lambda row: f"{row['stereo']:.2f}/{row['anti_stero']:.2f}/{row['no_change']:.2f}", axis=1)
+paired_df['combined'] = paired_df.apply(lambda row: f"{row['stereo']:.2f}/{row['anti_stero']:.2f}/{row['no_change']:.2f}/ {row['valid_count']}", axis=1)
 # Delete the original columns
-paired_df = paired_df.drop(columns=['stereo', 'anti_stero', 'no_change'])
+paired_df = paired_df.drop(columns=['stereo', 'anti_stero', 'no_change', 'valid_count'])
 # Pivot the DataFrame
 paired_df = paired_df.pivot(index='model', columns='prompt_template', values=['combined'])
 

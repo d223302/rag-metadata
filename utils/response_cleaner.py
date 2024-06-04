@@ -1,5 +1,6 @@
 # The following code is directly taken from https://github.com/facebookresearch/DrQA/blob/6d7c1b7087b86cfe9bdf84a279adb58dceada3cd/drqa/reader/utils.py#L174
 import regex as re
+import string
 
 def normalize_answer(s):
     """Lower text and remove punctuation, articles and extra whitespace."""

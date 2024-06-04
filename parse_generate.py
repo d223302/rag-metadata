@@ -5,21 +5,21 @@ import glob
 import os
 import json
 import regex
-from utils.reponse_cleaner import noramlize_answer
+from utils.response_cleaner import normalize_answer
 
 # TODO: This may need to be optimized
 def get_verdict(response):
-    cleaned_response = noramlize_answer(response).split()
+    cleaned_response = normalize_answer(response).split()
     
     n_yes = cleaned_response.count('yes')
     n_no = cleaned_response.count('no')
 
-    print(f"yes: {n_yes}, no: {n_no}")
+    # print(f"yes: {n_yes}, no: {n_no}")
     if n_yes > n_no:
         return 1
     elif n_yes < n_no:
         return 0
-    if n_yes == n_no and n_yes == 0:
+    if n_yes == n_no:
         return np.nan
 
 # Extract whether the date is presented
@@ -67,9 +67,10 @@ model_name_map = {
     "tulu-2-dpo-13b": "tulu-13b",
     "tulu-2-dpo-70b": "tulu-70b",
 }
+#"input_no_meta", "input_date", "input_date_today", "input_rank", "input_url", "input_emphasize_url", "input_emphasize_wiki_url", "input_emphasize_url_wiki_wordpress_url", "input_emphasize_url_cnn_naturalnews_url", "input_emphasize_src_wiki_wordpress_src", "input_emphasize_src_cnn_naturalnews_src", "input_html_pretty_simple_html"
 
 for model in model_list:
-    for prompt_template in ["input_no_meta", "input_date", "input_date_today", "input_rank", "input_url", "input_emphasize_url", "input_emphasize_wiki_url", "input_emphasize_url_wiki_wordpress_url", "input_emphasize_url_cnn_naturalnews_url"]:
+    for prompt_template in ["input_emphasize_url_wiki_wordpress_url", "input_emphasize_url_cnn_naturalnews_url"]:
         for stance in ['yes', 'no']:
             json_file = os.path.join(
                 result_path,
@@ -117,7 +118,8 @@ for model in model_list:
                 else:
                     url_count.append(0)
 
-            preference = np.mean(preference)
+            print(f"Model: {model}, preference: {len(preference)}")
+            preference = np.nanmean(preference)
             disagree_ratio = np.mean(disagree_ratio)
             date_count = np.mean(date_count)
             url_count = np.mean(url_count)
@@ -134,7 +136,7 @@ for model in model_list:
 df = pd.DataFrame(df)
 # Format the dataframe. The row is model. The column should be grouped by the prompt template and stance. Each cell is the preference
 
-df = df.pivot_table(index='model', columns=['prompt_template', 'stance'], values=['date_count'])
+df = df.pivot_table(index='model', columns=['prompt_template', 'stance'], values=['url_count'])
 #Order the prompt template
 # df = df[['input_no_meta', 'input_url', 'input_url_1', 'input_emphasize_url', 'input_emphasize_wiki_url_1']]
 print(df)
