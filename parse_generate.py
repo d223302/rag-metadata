@@ -5,13 +5,22 @@ import glob
 import os
 import json
 import regex
+from utils.reponse_cleaner import noramlize_answer
 
 # TODO: This may need to be optimized
 def get_verdict(response):
-    if "Yes" in response:
+    cleaned_response = noramlize_answer(response).split()
+    
+    n_yes = cleaned_response.count('yes')
+    n_no = cleaned_response.count('no')
+
+    print(f"yes: {n_yes}, no: {n_no}")
+    if n_yes > n_no:
         return 1
-    else:
+    elif n_yes < n_no:
         return 0
+    if n_yes == n_no and n_yes == 0:
+        return np.nan
 
 # Extract whether the date is presented
 def extract_date(response):
@@ -22,7 +31,7 @@ def extract_date(response):
 
 # Extract whether the website is presented
 def extract_website(response):
-    response = response.lower()
+    response = normalize_answer(response)
     if 'cnn' in response or 'wordpress' in response:
         return True
     elif 'naturalnews' in response or 'wiki' in response:
