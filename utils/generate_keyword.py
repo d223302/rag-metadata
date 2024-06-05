@@ -25,7 +25,7 @@ model = OpenAIModel(
     openai_api_key = '../api/openai.txt'
 )
 
-with open('../data/fake_knowledge_with_evidence_test.json', 'r') as f:
+with open('../data.json', 'r') as f:
     fake_knowledge = json.load(f)
 
 pbar = tqdm(enumerate(fake_knowledge), total=len(fake_knowledge))
@@ -33,54 +33,32 @@ new_results = []
 error_count = 0
 for idx, instance in pbar:
     
-    question = instance['question']
+    question = instance['search_query']
     refined_question_and_keyword = model.generate(
-        question_refinement_prompt.format(question=question)
+        keyword_extraction_prompt.format(question=question)
     )
     try:
-        data_dict = eval(refined_question_and_keyword)
-        refined_question = data_dict['refined_question']
-        keyword = data_dict['keyword']
+        keyword = eval(refined_question_and_keyword)
+        if len(keyword) == 0:
+            print(f"No keyword for the query {question}")
     except:
-        print(refined_question_and_keyword)
-        refined_question = refined_question_and_keyword
+        print(question)
         keyword = refined_question_and_keyword
-        exit()
+        # exit()
 
-    instance_result = {
-        "search_query": refined_question,
-        "search_type": [],
-        "urls": [],
-        "titles": [],
-        "keywords": keyword,
-        "text_window": [],
-        "stance": [],
-    }
-    for stance in instance['evidence']:
-        evidence = instance['evidence'][stance]['paragraph']
-        predicted_stance = instance['evidence'][stance]['predicted_stance']
-        if stance != predicted_stance:
-            error_count += 1
-            print(question)
-            continue
-        title = model.generate(
-            title_generation_prompt.format(paragraph=evidence)
-        )
-        instance_result['titles'].append(title)
-        instance_result['text_window'].append(evidence)
-        instance_result['stance'].append(stance.lower())
-        instance_result['urls'].append(None)
+    instance['keywords'] = keyword
 
-    new_results.append(instance_result)
+    
+    new_results.append(instance)
     # Save model cache
     model.save_cache()
     pbar.set_description(f'Error count: {error_count}')
 
     if idx % 5 == 0:
-        with open('../data/fake_knowledge_with_evidence_parsed_test.json', 'w') as f:
+        with open('../data_with_keyword.json', 'w') as f:
             json.dump(new_results, f, indent=4)
 
-with open('../data/fake_knowledge_with_evidence_parsed_test.json', 'w') as f:
+with open('../data/data_with_keyword.json', 'w') as f:
     json.dump(new_results, f, indent=4)
 
 # Summarize the cost
