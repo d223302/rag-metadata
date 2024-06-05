@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-for model in gemini-1.5-pro; do
+for model in "claude-3-sonnet-20240229"; do
     for yes_html_template in "simple" "pretty"; do
         for no_html_template in "simple" "pretty"; do
-            for prompt_template in "vision_prompts_with_text"; do
+            for prompt_template in "vision_prompts"; do
                 python3 vision_llm.py \
                     --model_name "$model" \
                     --dataset_path data/fake_knowledge_with_evidence_parsed.json \
