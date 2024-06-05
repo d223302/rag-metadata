@@ -142,7 +142,7 @@ for model in model_list:
 df = pd.DataFrame(df)
 # Format the dataframe. The row is model. The column should be grouped by the prompt template and counterfactual. Each cell is the preference
 
-df = df.pivot_table(index='model', columns=['prompt_template', 'counterfactual'], values=['disagree_ratio'])
+df = df.pivot_table(index='model', columns=['prompt_template', 'counterfactual'], values=['preference'])
 #Order the prompt template
 # df = df[['input_no_meta', 'input_url', 'input_url_1', 'input_emphasize_url', 'input_emphasize_wiki_url_1']]
 print(df)
