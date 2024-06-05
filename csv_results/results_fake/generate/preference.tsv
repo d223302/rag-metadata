@@ -1,0 +1,10 @@
+	preference	preference	preference	preference
+prompt_template	input_emphasize_url_cnn_naturalnews_url	input_emphasize_url_cnn_naturalnews_url	input_emphasize_url_wiki_wordpress_url	input_emphasize_url_wiki_wordpress_url
+stance	no	yes	no	yes
+model				
+Llama-2-13b	0.0	0.0	0.0	0.0
+Llama-2-70b		0.0		
+Llama-2-7b	0.024096385542168676	0.02247191011235955	0.0	0.03529411764705882
+Llama-3-8B	0.0	0.0	0.0	0.0
+gpt-4-turbo			0.058823529411764705	0.1
+tulu-7b	0.0	0.0	0.0	0.0
