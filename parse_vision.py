@@ -130,8 +130,8 @@ for model in model_list:
                     flip_ratio.append('no_change')
             else:
                 flip_ratio.append('n/a')
-        print(f"len(flip_ratio): {len(flip_ratio)}, len(paired_results['yes_simple_no_pretty']): {len(paired_results['yes_simple_no_pretty'])}")
-        print(flip_ratio)
+        # print(f"len(flip_ratio): {len(flip_ratio)}, len(paired_results['yes_simple_no_pretty']): {len(paired_results['yes_simple_no_pretty'])}")
+        # print(flip_ratio)
         paired_df['model'].append(model_name_map[model])
         paired_df['prompt_template'].append(template_map[prompt_template])
         paired_df['stereo'].append(flip_ratio.count('stereo') / (len(flip_ratio) + 1e-10))
@@ -142,10 +142,16 @@ for model in model_list:
 df = pd.DataFrame(df)
 # Format the dataframe. The row is model. The column should be grouped by the prompt template and counterfactual. Each cell is the preference
 
-df = df.pivot_table(index='model', columns=['prompt_template', 'counterfactual'], values=['preference'])
-#Order the prompt template
-# df = df[['input_no_meta', 'input_url', 'input_url_1', 'input_emphasize_url', 'input_emphasize_wiki_url_1']]
-print(df)
+for target_value in ['preference', 'disagree_ratio']:
+    cell_df = df.pivot_table(index='model', columns=['prompt_template', 'counterfactual'], values=[target_value])
+    print(cell_df)
+    
+    # Save the DataFrame to a tsv
+    file_name = f"csv_results/results_vision_fake/classify/{target_value}.tsv"
+    # Create the directory if it does not exist
+    if not os.path.exists(os.path.dirname(file_name)):
+        os.makedirs(os.path.dirname(file_name))
+    cell_df.to_csv(file_name, sep='\t')
 
 paired_df = pd.DataFrame(paired_df)
 paired_df['combined'] = paired_df.apply(lambda row: f"{row['stereo']:.2f}/{row['anti_stero']:.2f}/{row['no_change']:.2f}/{row['valid_count']}", axis=1)
@@ -155,3 +161,11 @@ paired_df = paired_df.drop(columns=['stereo', 'anti_stero', 'no_change', 'valid_
 paired_df = paired_df.pivot(index='model', columns='prompt_template', values=['combined'])
 
 print(paired_df)
+
+# Save the DataFrame to a tsv
+file_name = f"csv_results/results_vision_fake/classify/flip_ratio.tsv"
+# Create the directory if it does not exist
+if not os.path.exists(os.path.dirname(file_name)):
+    os.makedirs(os.path.dirname(file_name))
+paired_df.to_csv(file_name, sep='\t')
+
