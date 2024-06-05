@@ -1,0 +1,10 @@
+	url_count	url_count	url_count	url_count
+prompt_template	input_emphasize_url_cnn_naturalnews_url	input_emphasize_url_cnn_naturalnews_url	input_emphasize_url_wiki_wordpress_url	input_emphasize_url_wiki_wordpress_url
+stance	no	yes	no	yes
+model				
+Llama-2-13b	0.152	0.088	0.168	0.136
+Llama-2-70b		0.08		
+Llama-2-7b	0.008	0.016	0.024	0.04
+Llama-3-8B	0.128	0.16	0.312	0.192
+gpt-4-turbo			0.32	0.232
+tulu-7b	0.128	0.08	0.28	0.136

@@ -1,0 +1,10 @@
+	disagree_ratio	disagree_ratio	disagree_ratio	disagree_ratio
+prompt_template	input_emphasize_url_cnn_naturalnews_url	input_emphasize_url_cnn_naturalnews_url	input_emphasize_url_wiki_wordpress_url	input_emphasize_url_wiki_wordpress_url
+stance	no	yes	no	yes
+model				
+Llama-2-13b	0.744	0.776	0.752	0.768
+Llama-2-70b		0.912		
+Llama-2-7b	0.336	0.288	0.352	0.32
+Llama-3-8B	0.824	0.848	0.88	0.88
+gpt-4-turbo			0.864	0.84
+tulu-7b	0.96	0.968	0.968	0.968
