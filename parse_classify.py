@@ -69,8 +69,7 @@ template_map = {
 }
 
 for model in model_list:
-    # for prompt_template in ["input_no_meta", "input_date", "input_date_today", 'input_rank']:
-    for prompt_template in ['input_emphasize_url_cnn_naturalnews_url', 'input_emphasize_url_wiki_wordpress_url', 'input_url_cnn_naturalnews_url', 'input_url_wiki_wordpress_url', 'input_emphasize_src_cnn_naturalnews_src','input_emphasize_src_wiki_wordpress_src', "input_date", "input_date_today", 'input_rank']:
+    for prompt_template in ['input_emphasize_url_cnn_naturalnews_url', 'input_emphasize_url_wiki_wordpress_url', 'input_url_cnn_naturalnews_url', 'input_url_wiki_wordpress_url', 'input_emphasize_src_cnn_naturalnews_src','input_emphasize_src_wiki_wordpress_src', "input_date", "input_date_today", 'input_rank', 'input_no_meta']:
         paired_results = {
             'yes': [],
             'no': [],
@@ -84,7 +83,7 @@ for model in model_list:
             
             if not os.path.exists(json_file):
                 continue
-            print(f"Parsing {json_file}...")
+            # print(f"Parsing {json_file}...")
             try: 
                 data = json.load(open(json_file))
             except json.decoder.JSONDecodeError:
@@ -134,17 +133,22 @@ for model in model_list:
             print(f"Error in {json_file}")
             continue
         for i in range(len(paired_results['yes'])):
-            if (not np.isnan(paired_results['yes'][i])) and (not np.isnan(paired_results['no'][i])):
-                if paired_results['yes'][i] == 1 and paired_results['no'][i] == 0:
+            yes_result = paired_results['yes'][i]
+            no_result = paired_results['no'][i]
+            if (not np.isnan(yes_result)) and (not np.isnan(no_result)):
+                if yes_result == no_result:
+                    flip_ratio.append('no_change')
+                elif yes_result == 1 and no_result == 0:
                     flip_ratio.append('stereo')
-                elif paired_results['yes'][i] == 0 and paired_results['no'][i] == 1:
+                elif yes_result == 0 and no_result == 1:
                     flip_ratio.append('anti-stereo')
                 else:
-                    flip_ratio.append('no_change')
+                    raise ValueError(f"yes_result: {yes_result}, no_result: {no_result}")
             else:
                 flip_ratio.append('n/a')
-        print(f"len(flip_ratio): {len(flip_ratio)}, len(paired_results['yes']): {len(paired_results['yes'])}")
-        print(flip_ratio)
+        
+
+
         paired_df['model'].append(model_name_map[model])
         paired_df['prompt_template'].append(template_map[prompt_template])
         paired_df['stereo'].append(flip_ratio.count('stereo') / (len(flip_ratio) + 1e-10))
@@ -156,10 +160,17 @@ for model in model_list:
 df = pd.DataFrame(df)
 # Format the dataframe. The row is model. The column should be grouped by the prompt template and stance. Each cell is the preference
 
-df = df.pivot_table(index='model', columns=['prompt_template', 'stance'], values=['disagree_ratio'])
-#Order the prompt template
-# df = df[['input_no_meta', 'input_url', 'input_url_1', 'input_emphasize_url', 'input_emphasize_wiki_url_1']]
-print(df)
+
+for target_value in ['preference', 'disagree_ratio']:
+    cell_df = df.pivot_table(index='model', columns=['prompt_template', 'stance'], values=[target_value])
+    print(cell_df)
+    # Save the DataFrame to a tsv
+    file_name = f"csv_results/results_fake/classify/{target_value}.tsv"
+    # Create the directory if it does not exist
+    if not os.path.exists(os.path.dirname(file_name)):
+        os.makedirs(os.path.dirname(file_name))
+    cell_df.to_csv(file_name, sep='\t')
+
 
 paired_df = pd.DataFrame(paired_df)
 paired_df['combined'] = paired_df.apply(lambda row: f"{row['stereo']:.2f}/{row['anti_stero']:.2f}/{row['no_change']:.2f}/ {row['valid_count']}", axis=1)
@@ -169,3 +180,7 @@ paired_df = paired_df.drop(columns=['stereo', 'anti_stero', 'no_change', 'valid_
 paired_df = paired_df.pivot(index='model', columns='prompt_template', values=['combined'])
 
 print(paired_df)
+
+# Save the DataFrame to a tsv
+file_name = "csv_results/results_fake/classify/flip_ratio.tsv"
+paired_df.to_csv(file_name, sep='\t')

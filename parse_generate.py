@@ -41,7 +41,9 @@ def extract_website(response):
     else:
         return False
 
-result_path = 'results_fake/generate'
+dataset_type = 'results_fake'
+
+result_path = f'{dataset_type}/generate'
 model_list = [dir.split('/')[-1] for dir in glob.glob(result_path + '/*')]
 print(model_list)
 # 'Meta-Llama-3-8B-Instruct', "Llama-2-7b-chat-hf", "Llama-2-13b-chat-hf", "Llama-2-70b-chat-hf", 
@@ -66,6 +68,11 @@ model_name_map = {
     "tulu-2-dpo-7b": "tulu-7b",
     "tulu-2-dpo-13b": "tulu-13b",
     "tulu-2-dpo-70b": "tulu-70b",
+    "claude-3-haiku-20240307": "claude-haiku",
+    "claude-3-sonnet-20240229": "claude-sonnet",
+    "claude-3-opus-20240229": "claude-opus",
+    "gpt-4o": "gpt-4o",
+    'gemini-1.5-pro': 'gemini-1.5-pro',
 }
 #"input_no_meta", "input_date", "input_date_today", "input_rank", "input_url", "input_emphasize_url", "input_emphasize_wiki_url", "input_emphasize_url_wiki_wordpress_url", "input_emphasize_url_cnn_naturalnews_url", "input_emphasize_src_wiki_wordpress_src", "input_emphasize_src_cnn_naturalnews_src", "input_html_pretty_simple_html"
 
@@ -136,7 +143,13 @@ for model in model_list:
 df = pd.DataFrame(df)
 # Format the dataframe. The row is model. The column should be grouped by the prompt template and stance. Each cell is the preference
 
-df = df.pivot_table(index='model', columns=['prompt_template', 'stance'], values=['url_count'])
-#Order the prompt template
-# df = df[['input_no_meta', 'input_url', 'input_url_1', 'input_emphasize_url', 'input_emphasize_wiki_url_1']]
-print(df)
+
+for target_value in ['preference', 'disagree_ratio', 'date_count', 'url_count']:
+    cell_df = df.pivot_table(index='model', columns=['prompt_template', 'stance'], values=[target_value])
+    print(cell_df)
+    # Save the DataFrame to a tsv
+    file_name = f"csv_results/{dataset_type}/generate/{target_value}.tsv"
+    # Create the directory if it does not exist
+    if not os.path.exists(os.path.dirname(file_name)):
+        os.makedirs(os.path.dirname(file_name))
+    cell_df.to_csv(file_name, sep='\t')
