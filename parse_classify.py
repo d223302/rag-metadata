@@ -16,7 +16,7 @@ def extract_yes_no_answer(answer):
     else:
         return 'n/a' # TODO: check if we should return something else
 
-result_path = 'results_fake/classify'
+result_path = 'results/classify'
 model_list = [dir.split('/')[-1] for dir in glob.glob(result_path + '/*')]
 print(model_list)
 # 'Meta-Llama-3-8B-Instruct', "Llama-2-7b-chat-hf", "Llama-2-13b-chat-hf", "Llama-2-70b-chat-hf", 
