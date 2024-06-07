@@ -262,6 +262,10 @@ class OpenAIModel(LM):
         if self.model_name == "gpt-4-32k":
             raise ValueError("Please do not use gpt-4-32k, it is too expensive to use")
         
+        if 'n' in self.sampling_params:
+            if self.sampling_params['n']== 1:
+                self.sampling_params.pop('n')
+        
         if "3.5" in self.model_name:
             self.input_token_cost = 1.50 / 1_000_000
             self.output_token_cost = 2.00 / 1_000_000
@@ -297,7 +301,11 @@ class OpenAIModel(LM):
             )
             self.input_token_count += outputs.usage.prompt_tokens
             self.output_token_count += outputs.usage.completion_tokens
-            response = outputs.choices[0].message.content
+            # If the sampling parameters contain 'n'
+            if 'n' in self.sampling_params:
+                    response = [output.message.content for output in outputs.choices]
+            else:
+                response = outputs.choices[0].message.content
             self.cache_dict[key] = response
             self.save_cache()
             return response

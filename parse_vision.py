@@ -5,6 +5,7 @@ import glob
 import os
 import json
 from utils.response_cleaner import normalize_answer
+from statsmodels.stats.contingency_tables import mcnemar
 
 def extract_yes_no_answer(answer):
     answer = normalize_answer(answer)
@@ -117,14 +118,19 @@ for model in model_list:
             df['disagree_ratio'].append(disagree_ratio)
 
         flip_ratio = []
-        if len(paired_results['yes_pretty_no_simple']) != len(paired_results['yes_simple_no_pretty']):
+        treatment = "yes_simple_no_pretty"
+        no_treatment = "yes_pretty_no_simple"
+        mcnemar_table = [[0, 0], [0, 0]]
+
+        if len(paired_results[treatment]) != len(paired_results[no_treatment]):
             print(f"Error in {json_file}")
             continue
-        for i in range(len(paired_results['yes_pretty_no_simple'])):
-            if (not np.isnan(paired_results['yes_pretty_no_simple'][i])) and (not np.isnan(paired_results['yes_simple_no_pretty'][i])):
-                if paired_results['yes_pretty_no_simple'][i] == 1 and paired_results['yes_simple_no_pretty'][i] == 0:
+        for i in range(len(paired_results[treatment])):
+            if (not np.isnan(paired_results[treatment][i])) and (not np.isnan(paired_results[no_treatment][i])):
+                mcnemar_table[paired_results[treatment][i]][paired_results[no_treatment][i]] += 1
+                if paired_results[treatment][i] == 1 and paired_results[no_treatment][i] == 0:
                     flip_ratio.append('stereo')
-                elif paired_results['yes_pretty_no_simple'][i] == 0 and paired_results['yes_simple_no_pretty'][i] == 1:
+                elif paired_results[treatment][i] == 0 and paired_results[no_treatment][i] == 1:
                     flip_ratio.append('anti-stereo')
                 else:
                     flip_ratio.append('no_change')
@@ -138,6 +144,10 @@ for model in model_list:
         paired_df['anti_stero'].append(flip_ratio.count('anti-stereo') / (len(flip_ratio) + 1e-10))
         paired_df['no_change'].append(flip_ratio.count('no_change') / (len(flip_ratio) + 1e-10))
         paired_df['valid_count'].append(len(flip_ratio) - flip_ratio.count('n/a'))
+
+        # Perform McNemar test
+        result = mcnemar(mcnemar_table)
+        print(f"Model: {model_name_map[model]}, prompt_template: {template_map[prompt_template]}, p-value: {result.pvalue}")
 
 df = pd.DataFrame(df)
 # Format the dataframe. The row is model. The column should be grouped by the prompt template and counterfactual. Each cell is the preference
