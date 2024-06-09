@@ -1,9 +1,6 @@
-	disagree_ratio	disagree_ratio	disagree_ratio	disagree_ratio	disagree_ratio	disagree_ratio	disagree_ratio	disagree_ratio
-prompt_template	PNG	PNG	PNG	PNG	PNG+Text	PNG+Text	PNG+Text	PNG+Text
-counterfactual	yes_pretty_no_pretty	yes_pretty_no_simple	yes_simple_no_pretty	yes_simple_no_simple	yes_pretty_no_pretty	yes_pretty_no_simple	yes_simple_no_pretty	yes_simple_no_simple
-model								
-claude-haiku	0.152	0.184	0.168	0.144	0.28	0.448	0.2	0.272
-claude-opus	0.184	0.192	0.12	0.216		0.432	0.36	0.344
-claude-sonnet	0.136	0.232	0.016	0.16	0.056	0.12	0.088	0.104
-gemini-1.5-pro						0.184	0.184	0.152
-gpt-4o	0.096	0.008	0.032	0.016	0.0	0.008	0.0	0.0
+	disagree_ratio	disagree_ratio	disagree_ratio	disagree_ratio
+prompt_template	PNG	PNG	PNG	PNG
+counterfactual	yes_pretty_no_pretty	yes_pretty_no_simple	yes_simple_no_pretty	yes_simple_no_simple
+model				
+claude-haiku	0.376	0.392	0.168	0.376
+claude-sonnet	0.36	0.288	0.264	0.304

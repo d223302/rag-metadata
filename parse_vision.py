@@ -7,6 +7,41 @@ import json
 from utils.response_cleaner import normalize_answer
 from statsmodels.stats.contingency_tables import mcnemar
 
+
+
+def get_verdict(response):
+    statistics = {
+        'yes': 0,
+        'no': 0,
+        'inconclusive': 0,
+        'invalid': 0
+    }
+    key_to_verdict = {
+        'yes': 'yes',
+        'no': 'no',
+        'inconclusive': 'inconclusive',
+        'invalid': 'n/a'
+    }
+    for r in response:
+        r = normalize_answer(r)
+        if 'yes' in r:
+            statistics['yes'] += 1
+        elif 'no' in r:
+            statistics['no'] += 1
+        elif 'inconclusive' in r:
+            statistics['inconclusive'] += 1
+        else:
+            statistics['invalid'] += 1
+
+    # Get the majority vote
+    max_value = max(statistics.values())
+    if max_value <= 1:
+        return np.nan
+    else:
+        for key, value in statistics.items():
+            if value == max_value:
+                return key_to_verdict[key]
+
 def extract_yes_no_answer(answer):
     answer = normalize_answer(answer)
     if 'yes' in answer:
@@ -16,8 +51,13 @@ def extract_yes_no_answer(answer):
     else:
         return 'n/a' # TODO: check if we should return something else
 
+result_path = 'results_vision_fake/generate_short_answer'
+if "generate" in result_path:
+    generation = True
+else:
+    generation = False
 
-result_path = 'results_vision_fake/classify'
+
 model_list = [dir.split('/')[-1] for dir in glob.glob(result_path + '/*')]
 print(model_list)
 # 'Meta-Llama-3-8B-Instruct', "Llama-2-7b-chat-hf", "Llama-2-13b-chat-hf", "Llama-2-70b-chat-hf", 
@@ -92,8 +132,12 @@ for model in model_list:
             disagree_ratio = []
             preference = []
             for v in verdict:
-                v[0] = extract_yes_no_answer(v[0])
-                v[1] = extract_yes_no_answer(v[1])
+                if generation:
+                    v[0] = get_verdict(v[0])
+                    v[1] = get_verdict(v[1])
+                else:
+                    v[0] = extract_yes_no_answer(v[0])
+                    v[1] = extract_yes_no_answer(v[1])
                 if v[0] == 'n/a' or v[1] == 'n/a':
                     preference.append(np.nan)
                     disagree_ratio.append(np.nan)
@@ -106,6 +150,8 @@ for model in model_list:
                             preference.append(1)
                         elif v[0] == 'no':
                             preference.append(0)
+                        elif v[0] == 'inconclusive':
+                            preference.append(0.5)
 
             paired_results[counterfactual] = preference
             disagree_ratio = np.mean(np.isnan(preference))
@@ -118,8 +164,8 @@ for model in model_list:
             df['disagree_ratio'].append(disagree_ratio)
 
         flip_ratio = []
-        treatment = "yes_simple_no_pretty"
-        no_treatment = "yes_pretty_no_simple"
+        treatment = "yes_pretty_no_simple"
+        no_treatment = "yes_simple_no_pretty"
         mcnemar_table = [[0, 0], [0, 0]]
 
         if len(paired_results[treatment]) != len(paired_results[no_treatment]):
@@ -127,10 +173,13 @@ for model in model_list:
             continue
         for i in range(len(paired_results[treatment])):
             if (not np.isnan(paired_results[treatment][i])) and (not np.isnan(paired_results[no_treatment][i])):
-                mcnemar_table[paired_results[treatment][i]][paired_results[no_treatment][i]] += 1
-                if paired_results[treatment][i] == 1 and paired_results[no_treatment][i] == 0:
+                treatment_index = 1 if paired_results[treatment][i] == 1 else 0
+                no_treatment_index = 1 if paired_results[no_treatment][i] == 1 else 0
+                mcnemar_table[treatment_index][no_treatment_index] += 1
+
+                if paired_results[treatment][i] == 1 and paired_results[no_treatment][i] != 1:
                     flip_ratio.append('stereo')
-                elif paired_results[treatment][i] == 0 and paired_results[no_treatment][i] == 1:
+                elif paired_results[treatment][i] != 1 and paired_results[no_treatment][i] == 1:
                     flip_ratio.append('anti-stereo')
                 else:
                     flip_ratio.append('no_change')
