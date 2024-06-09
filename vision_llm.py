@@ -86,6 +86,7 @@ def main(args):
         openai_api_key = args.openai_api_key,
         google_api_key = args.google_api_key,
         claude_api_key = args.claude_api_key,
+        vllm = False,
     )
     
 
@@ -147,6 +148,15 @@ def main(args):
                     '''Answer with only "Yes" or "No". Do not answer with anything other than "Yes" or "No".''',
                     'Give a concise answer with explanations.'
                 )
+                if args.credibility:
+                    search_engine_input[2] = search_engine_input[2].replace(
+                        'Using these two websites, answer the following question',
+                        'The two websites are for you to answer the following question'
+                    )
+                    search_engine_input[2] = search_engine_input[2].replace(
+                        'Give a concise answer with explanations.',
+                        '''Instead of answering the above question, please tell me which website is more credible and briefly explain why. Your answer must include the sentence "Website 1 is more credible" or "Website 2 is more credible". If you cannot determine which source is more credible, please answer "I cannot determine which website is more credible".'''
+                    )
                 
             if args.generation:
                 response = llm.full_generate_with_img(
@@ -274,6 +284,11 @@ if __name__ == "__main__":
         '--generation',
         action = 'store_true',
         help = "If true, the model will generate the response using greedy decoding. Otherwise, we will only calculate the probability of yes/no."
+    )
+    parser.add_argument(
+        '--credibility',
+        action = 'store_true',
+        help = "If true, we will query the LLM by asking which document is more credible."
     )
     parser.add_argument(
         '--image_dir',
