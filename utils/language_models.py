@@ -12,7 +12,7 @@ import pathlib
 import torch
 import signal
 import base64
-from vllm import LLM, SamplingParams
+# TODO: Remove everything related to VLLM
 logger = logging.getLogger(__name__)
 
 def encode_image(image_path):
