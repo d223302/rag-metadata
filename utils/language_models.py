@@ -12,7 +12,7 @@ import pathlib
 import torch
 import signal
 import base64
-
+from vllm import LLM, SamplingParams
 logger = logging.getLogger(__name__)
 
 def encode_image(image_path):
@@ -92,7 +92,73 @@ class LM():
         logger.info(f"Output token cost: {(self.output_token_count * self.output_token_cost):.3f}")
         logger.info("=" * 30)
 
+class VllmLM(LM):
+    prompt_suffix = {
+        "meta-llama/Meta-Llama-3-8B-Instruct": "<|start_header_id|>assistant<|end_header_id|>\n\n",
+        "meta-llama/Meta-Llama-3-70B-Instruct": "<|start_header_id|>assistant<|end_header_id|>\n\n",
+        "meta-llama/Llama-2-7b-chat-hf": " ",
+        "meta-llama/Llama-2-13b-chat-hf": " ",
+        "meta-llama/Llama-2-70b-chat-hf": " ",
+        "allenai/tulu-2-dpo-7b": "<|assistant|>\n",
+        "allenai/tulu-2-dpo-13b": "<|assistant|>\n",
+        "allenai/tulu-2-dpo-70b": "<|assistant|>\n",
+        "dpo_output": "<|assistant|>\n",
+    }
 
+    def __init__(self, tensor_parallel_size, **kwargs):
+        super().__init__(**kwargs)
+        from vllm import LLM, SamplingParams
+        self.llm = LLM(
+            model = self.model_name, 
+            dtype = 'half',
+            tensor_parallel_size = tensor_parallel_size
+        )
+        self.tokenizer = self.llm.get_tokenizer()
+        self.generation_params = GenerationConfig(
+            max_new_tokens = self.sampling_params["max_tokens"] if "max_tokens" in self.sampling_params else 512,
+            temperature = self.sampling_params["temperature"] if "temperature" in self.sampling_params else 1.0,
+            top_p = self.sampling_params["top_p"] if "top_p" in self.sampling_params else 0.95,
+            pad_token_id = self.tokenizer.eos_token_id,
+        )
+    
+    def full_generate(self, user_prompt, max_new_tokens = 512):
+        # TODO: The following function does not consider the generatiion config at all
+
+        if hasattr(self.tokenizer, "apply_chat_template"):
+            dialogue = [
+                {"role": "user", "content": user_prompt.strip()},
+            ]
+            prompt = self.tokenizer.apply_chat_template(dialogue, tokenize = False)
+            prompt += self.prompt_suffix[self.model_name]
+        else:
+            raise NotImplementedError(f"apply_chat_template method must be implemented in tokenizer class for model: {self.model_name}")
+        # print(prompt + "PROMPT_ENDS_HERE")
+        # print("========")
+
+        past_key_values = None
+        # First pass to get the CoT answer
+        if prompt in self.cache_dict:
+            return self.cache_dict[prompt]
+        else:
+            # hardcode sampling parameters
+            sampling_params = SamplingParams(
+                max_tokens = 6, # TODO: change this back
+                temperature = 0.0,
+            )
+            with torch.no_grad():
+                output = self.llm.generate(
+                    [prompt],
+                    sampling_params,
+                )
+            # full_output_tokens = output[0].detach().cpu().numpy()
+            output_tokens = output[0].outputs[0].text
+            print('response:', output_tokens)
+            exit()
+            past_key_values = None
+            self.cache_dict[prompt] = decoded_output
+        
+        # TODO: Check if we need to use the second pass to get the yes/no prediction
+        return decoded_output
 
 
 # TODO ends
@@ -215,6 +281,8 @@ class TransformerLM(LM):
             return prediction
         
     def full_generate(self, user_prompt, max_new_tokens = 512):
+        # TODO: The following function does not consider the generatiion config at all
+
         if hasattr(self.tokenizer, "apply_chat_template"):
             dialogue = [
                 {"role": "user", "content": user_prompt.strip()},
@@ -248,9 +316,6 @@ class TransformerLM(LM):
         
         # TODO: Check if we need to use the second pass to get the yes/no prediction
         return decoded_output
-    
-    def apply_chat_template(self, user_prompt):
-        raise NotImplementedError("apply_chat_template method must be implemented in derived class")
 
 
 class OpenAIModel(LM):
@@ -554,6 +619,9 @@ class ClaudeLLM(LM):
                 break
 
             return response
+    
+    def full_generate(self, user_prompt, system_prompt = ""):
+        return self.generate(user_prompt, system_prompt)
 
     
     
@@ -651,7 +719,7 @@ class ClaudeLLM(LM):
             system_prompt = system_prompt,
         )
 
-def create_llm(model_name, cache_file, sampling_params, **kwargs):
+def create_llm(model_name, cache_file, sampling_params, vllm, **kwargs):
     if "gemini" in model_name:
         return GeminiModel(
             model_name = model_name, 
@@ -674,9 +742,17 @@ def create_llm(model_name, cache_file, sampling_params, **kwargs):
             **kwargs
         )
     else:
-        return TransformerLM(
-            model_name = model_name, 
-            cache_file = cache_file, 
-            sampling_params = sampling_params, 
-            **kwargs
-        )
+        if vllm:
+            return VllmLM(
+                model_name = model_name, 
+                cache_file = cache_file + '_vllm', 
+                sampling_params = sampling_params,
+                **kwargs
+            )
+        else:
+            return TransformerLM(
+                model_name = model_name, 
+                cache_file = cache_file, 
+                sampling_params = sampling_params, 
+                **kwargs
+            )

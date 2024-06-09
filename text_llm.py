@@ -43,6 +43,10 @@ logging.getLogger("utils.language_models").setLevel(logging.INFO)
 
 
 def check_args(args):
+    if args.credibility and not args.generation:
+        raise ValueError("The credibility flag is only used for generation. Please set the generation flag to True for generation or remove the credibility flag for classification.")
+    if not args.generation and args.vllm:
+        raise ValueError("The vllm flag is only used for generation. Please set the generation flag to True for generation or remove the vllm flag for classification.")
     if args.modify_meta_data:
         if args.prompt_template not in ["input_date", "input_date_today", "input_url", "input_rank", "input_rank_no_google", "input_emphasize_url", "input_emphasize_wiki_url", "wiki_wordpress_url", "cnn_naturalnews_url", "input_emphasize_src", 'input_html']:
             logger.info("Please select a valid prompt template that has a meta data field.")
@@ -93,10 +97,11 @@ def main(args):
             args.model_name.split('/')[-1] + ("generate" if args.generation else ""),
         ),
         sampling_params = sampling_params,
-        tensor_parallel_size = 2,
+        tensor_parallel_size = torch.cuda.device_count(),
         openai_api_key = args.openai_api_key,
         google_api_key = args.google_api_key,
         claude_api_key = args.claude_api_key,
+        vllm = args.vllm,
     )
     
     # Load wiki url
@@ -216,6 +221,15 @@ def main(args):
                     '''Answer with only "Yes" or "No". Do not answer with anything other than "Yes" or "No".''',
                     'Give a concise answer with explanations.'
                 )
+                if args.credibility:
+                    search_engine_input = search_engine_input.replace(
+                        'Using these two sources, answer the following question',
+                        'The two sources are for you to answer the following question'
+                    )
+                    search_engine_input = search_engine_input.replace(
+                        'Give a concise answer with explanations.',
+                        '''Instead of answering the above question, please tell me which source is more credible and briefly explain why. Your answer must include the sentence "Source 1 is more credible" or "Source 2 is more credible". If you cannot determine which source is more credible, please answer "I cannot determine which source is more credible".'''
+                    )
             if args.generation:
                 response = llm.full_generate(search_engine_input)
             else:
@@ -345,6 +359,11 @@ if __name__ == "__main__":
         help = "If true, the model will generate the response using greedy decoding. Otherwise, we will only calculate the probability of yes/no."
     )
     parser.add_argument(
+        '--credibility',
+        action = 'store_true',
+        help = "If true, we will query the LLM by asking which document is more credible."
+    )
+    parser.add_argument(
         '--url_modifier',
         type = str,
         default = "",
@@ -355,6 +374,11 @@ if __name__ == "__main__":
         type = int,
         default = 10,
         help = "The maximum number of tokens to generate",
+    )
+    parser.add_argument(
+        "--vllm",
+        action = 'store_true',
+        help = "If true, the model will be loaded using vllm iunstead of huggingface",
     )
     args = parser.parse_args()
     main(args)

@@ -6,7 +6,6 @@ import os
 import json
 from utils.response_cleaner import normalize_answer
 
-
 def extract_yes_no_answer(answer):
     answer = normalize_answer(answer)
     if 'yes' in answer:
@@ -16,7 +15,8 @@ def extract_yes_no_answer(answer):
     else:
         return 'n/a' # TODO: check if we should return something else
 
-result_path = 'results/classify'
+dataset_type = "results_fake"
+result_path = f'{dataset_type}/classify'
 model_list = [dir.split('/')[-1] for dir in glob.glob(result_path + '/*')]
 print(model_list)
 # 'Meta-Llama-3-8B-Instruct', "Llama-2-7b-chat-hf", "Llama-2-13b-chat-hf", "Llama-2-70b-chat-hf", 
@@ -87,7 +87,7 @@ for model in model_list:
             try: 
                 data = json.load(open(json_file))
             except json.decoder.JSONDecodeError:
-                print(f"Error in {json_file}")
+                print(f"{Fore.RED}Error in {json_file}{Style.RESET_ALL}")
                 continue
             json_prompt_template = data['args']['prompt_template']
             json_modify_meta_data = data['args']['modify_meta_data']
@@ -130,7 +130,7 @@ for model in model_list:
         # Calculate the flip ratio and consistent ratio
         flip_ratio = []
         if len(paired_results['yes']) != len(paired_results['no']):
-            print(f"Error in {json_file}")
+            print(f"{Fore.RED}Error in {json_file}{Style.RESET_ALL}")
             continue
         for i in range(len(paired_results['yes'])):
             yes_result = paired_results['yes'][i]
@@ -147,6 +147,7 @@ for model in model_list:
             else:
                 flip_ratio.append('n/a')
         
+        print(flip_ratio)
 
 
         paired_df['model'].append(model_name_map[model])
@@ -165,7 +166,7 @@ for target_value in ['preference', 'disagree_ratio']:
     cell_df = df.pivot_table(index='model', columns=['prompt_template', 'stance'], values=[target_value])
     print(cell_df)
     # Save the DataFrame to a tsv
-    file_name = f"csv_results/results_fake/classify/{target_value}.tsv"
+    file_name = f"csv_results/{dataset_type}/classify/{target_value}.tsv"
     # Create the directory if it does not exist
     if not os.path.exists(os.path.dirname(file_name)):
         os.makedirs(os.path.dirname(file_name))
@@ -182,5 +183,5 @@ paired_df = paired_df.pivot(index='model', columns='prompt_template', values=['c
 print(paired_df)
 
 # Save the DataFrame to a tsv
-file_name = "csv_results/results_fake/classify/flip_ratio.tsv"
+file_name = "csv_results/{dataset_type}/classify/flip_ratio.tsv"
 paired_df.to_csv(file_name, sep='\t')

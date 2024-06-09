@@ -38,9 +38,12 @@ logging.getLogger("utils.language_models").setLevel(logging.INFO)
 
 
 parser = argparse.ArgumentParser(description='Extract the short answer from a long answer')
-parser.add_argument('--question_file', type=str, help='The input file path with questions')
+parser.add_argument('--question_file', type=str, help='The input file path with questions', default = "")
 parser.add_argument('--answer_file', type=str, help='The input file path with long answers')
 args = parser.parse_args()
+
+if args.question_file != "":
+    raise ValueError("This script does not require a question file as input")
 
 if not os.path.exists(args.answer_file):
     raise FileNotFoundError(f"File not found: {args.answer_file}")
@@ -71,13 +74,19 @@ model = OpenAIModel(
     openai_api_key = './api/openai.txt'
 )
 
+with open(args.answer_file, 'r') as f:
+    long_answer_file = json.load(f)
+long_answers = long_answer_file['data']
+
+args.question_file = long_answer_file['args']['dataset_path']
+
+logger.info(f"Loading the question file from {Fore.BLUE}{args.question_file}{Style.RESET_ALL}")
+
 with open(args.question_file, 'r') as f:
     question_file = json.load(f)
 questions = [instance['search_query'] for instance in question_file]
 
-with open(args.answer_file, 'r') as f:
-    long_answer_file = json.load(f)
-long_answers = long_answer_file['data']
+
 
 assert len(questions) == len(long_answers)
 
@@ -101,7 +110,9 @@ for idx, (q, (a_1, a_2)) in pbar:
     
     new_results.append([short_a1, short_a2])
     # Save model cache
-    model.save_cache()
+    if idx % 10 == 0:
+        model.save_cache()
+model.save_cache()
 
 short_answer_file = long_answer_file.copy()
 short_answer_file['data'] = new_results
