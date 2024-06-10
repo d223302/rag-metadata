@@ -5,17 +5,25 @@ import glob
 import os
 import json
 from utils.response_cleaner import normalize_answer
+from colorama import Fore, Style
 
 def extract_yes_no_answer(answer):
-    answer = normalize_answer(answer)
-    if 'yes' in answer:
-        return 'yes'
-    elif 'no' in answer:
-        return 'no'
+    if isinstance(answer, str):
+        answer = normalize_answer(answer)
+        if 'yes' in answer:
+            return 'yes'
+        elif 'no' in answer:
+            return 'no'
+        else:
+            return 'n/a' # TODO: check if we should return something else
+    elif np.isnan(answer):
+        return 'n/a'
+    elif answer == 0.5:
+        return 'n/a'
     else:
-        return 'n/a' # TODO: check if we should return something else
+        raise ValueError(f"answer: {answer}")
 
-dataset_type = "results_fake"
+dataset_type = "results"
 result_path = f'{dataset_type}/classify'
 model_list = [dir.split('/')[-1] for dir in glob.glob(result_path + '/*')]
 print(model_list)
@@ -116,7 +124,7 @@ for model in model_list:
                         elif v[0] == 'no':
                             preference.append(0)
 
-
+            print(preference)
             paired_results[stance] = preference
             disagree_ratio = np.mean(np.isnan(preference))
             preference = np.nanmean(preference)
@@ -147,7 +155,7 @@ for model in model_list:
             else:
                 flip_ratio.append('n/a')
         
-        print(flip_ratio)
+        # print(flip_ratio)
 
 
         paired_df['model'].append(model_name_map[model])
@@ -183,5 +191,5 @@ paired_df = paired_df.pivot(index='model', columns='prompt_template', values=['c
 print(paired_df)
 
 # Save the DataFrame to a tsv
-file_name = "csv_results/{dataset_type}/classify/flip_ratio.tsv"
+file_name = f"csv_results/{dataset_type}/classify/flip_ratio.tsv"
 paired_df.to_csv(file_name, sep='\t')
