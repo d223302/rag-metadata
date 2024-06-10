@@ -247,48 +247,34 @@ conda activate unsloth_env
 
 
 
-for model in "meta-llama/Llama-2-13b-chat-hf"; do
-    for url_modifier in "cnn_naturalnews_url" "wiki_wordpress_url"; do
-      for prompt_template in "input_emphasize_url"; do
-        for modify_meta_data in 1; do
-            if [[ $modify_meta_data == 1 ]]; then
-                for favored_stance in "yes" "no"; do
-                    python3 text_llm.py \
-                        --generation \
-                        --credibility \
-                        --max_tokens 512 \
-                        --url_modifier "$url_modifier" \
-                        --model_name "$model" \
-                        --prompt_template "$prompt_template" \
-                        --favored_stance "$favored_stance" \
-                        --modify_meta_data "$modify_meta_data" \
-                        --dataset_path data/fake_knowledge_with_evidence_parsed.json \
-                        --output_dir results_fake
-
-                done
-            else
-                python3 text_llm.py \
-                    --generation \
-                    --credibility \
-                    --max_tokens 512 \
-                    --url_modifier "$url_modifier" \
-                    --model_name "$model" \
-                    --prompt_template "$prompt_template" \
-                    --modify_meta_data "$modify_meta_data" \
-                    --dataset_path data/fake_knowledge_with_evidence_parsed.json \
-                    --output_dir results_fake
-            fi
-        done
-      done
-    done
-done
+#   for model in "meta-llama/Llama-2-13b-chat-hf"; do
+#       for url_modifier in "cnn_naturalnews_url" "wiki_wordpress_url"; do
+#         for prompt_template in "input_emphasize_url"; do
+#           for modify_meta_data in 1; do
+#                   for favored_stance in "yes" "no"; do
+#                       python3 text_llm.py \
+#                           --generation \
+#                           --credibility \
+#                           --max_tokens 512 \
+#                           --url_modifier "$url_modifier" \
+#                           --model_name "$model" \
+#                           --prompt_template "$prompt_template" \
+#                           --favored_stance "$favored_stance" \
+#                           --modify_meta_data "$modify_meta_data" \
+#                           --dataset_path data/fake_knowledge_with_evidence_parsed.json \
+#                           --output_dir results_fake
+#   
+#                   done
+#           done
+#         done
+#       done
+#   done
 
 
-for model in "meta-llama/Llama-2-13b-chat-hf"; do
+for model in "meta-llama/Meta-Llama-3-8B-Instruct"; do
     for url_modifier in "cnn_naturalnews_src" "wiki_wordpress_src"; do
       for prompt_template in "input_emphasize_src"; do
         for modify_meta_data in 1; do
-            if [[ $modify_meta_data == 1 ]]; then
                 for favored_stance in "yes" "no"; do
                     python3 text_llm.py \
                         --generation \
@@ -303,18 +289,6 @@ for model in "meta-llama/Llama-2-13b-chat-hf"; do
                         --output_dir results_fake
 
                 done
-            else
-                python3 text_llm.py \
-                    --generation \
-                    --credibility \
-                    --max_tokens 512 \
-                    --url_modifier "$url_modifier" \
-                    --model_name "$model" \
-                    --prompt_template "$prompt_template" \
-                    --modify_meta_data "$modify_meta_data" \
-                    --dataset_path data/fake_knowledge_with_evidence_parsed.json \
-                    --output_dir results_fake
-            fi
         done
       done
     done
