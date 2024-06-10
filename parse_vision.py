@@ -23,15 +23,23 @@ def get_verdict(response):
         'invalid': 'n/a'
     }
     for r in response:
-        r = normalize_answer(r)
-        if 'yes' in r:
-            statistics['yes'] += 1
-        elif 'no' in r:
-            statistics['no'] += 1
-        elif 'inconclusive' in r:
-            statistics['inconclusive'] += 1
+        if isinstance(r, float):
+            if np.isnan(r):
+                statistics['invalid'] += 1
+            elif r == 0.5:
+                statistics['inconclusive'] += 1
+            else:
+                raise ValueError(f"r: {r}")
         else:
-            statistics['invalid'] += 1
+            r = normalize_answer(r)
+            if 'yes' in r:
+                statistics['yes'] += 1
+            elif 'no' in r:
+                statistics['no'] += 1
+            elif 'inconclusive' in r:
+                statistics['inconclusive'] += 1
+            else:
+                statistics['invalid'] += 1
 
     # Get the majority vote
     max_value = max(statistics.values())
@@ -43,15 +51,18 @@ def get_verdict(response):
                 return key_to_verdict[key]
 
 def extract_yes_no_answer(answer):
-    answer = normalize_answer(answer)
-    if 'yes' in answer:
-        return 'yes'
-    elif 'no' in answer:
-        return 'no'
+    if isinstance(answer, str):
+        answer = normalize_answer(answer)
+        if 'yes' in answer:
+            return 'yes'
+        elif 'no' in answer:
+            return 'no'
+        else:
+            return 'n/a' # TODO: check if we should return something else
     else:
-        return 'n/a' # TODO: check if we should return something else
+        return 'n/a'
 
-result_path = 'results_vision_fake/generate_short_answer'
+result_path = 'results_vision_fake/credible_short_answer'
 if "generate" in result_path:
     generation = True
 else:

@@ -1,6 +1,6 @@
-	disagree_ratio	disagree_ratio	disagree_ratio	disagree_ratio
-prompt_template	PNG	PNG	PNG	PNG
-counterfactual	yes_pretty_no_pretty	yes_pretty_no_simple	yes_simple_no_pretty	yes_simple_no_simple
-model				
-claude-haiku	0.376	0.392	0.168	0.376
-claude-sonnet	0.36	0.288	0.264	0.304
+	disagree_ratio	disagree_ratio
+prompt_template	PNG	PNG
+counterfactual	yes_pretty_no_simple	yes_simple_no_pretty
+model		
+claude-haiku	0.096	0.176
+claude-sonnet	0.288	0.104
