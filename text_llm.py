@@ -77,11 +77,27 @@ def main(args):
     }
 
     # Prepare the output directory
-    args.output_dir = os.path.join(
-        args.output_dir,
-        'generate' if args.generation else 'classify',
-        f"{args.model_name.split('/')[-1]}"
-    )
+    
+    if args.generation:
+        if args.credibility:
+            args.output_dir = os.path.join(
+                args.output_dir,
+                'credible',
+                f"{args.model_name.split('/')[-1]}"
+            )
+        else:
+            args.output_dir = os.path.join(
+                args.output_dir,
+                'generate',
+                f"{args.model_name.split('/')[-1]}"
+            )
+    else:
+        args.output_dir = os.path.join(
+            args.output_dir,
+            'classify',
+            f"{args.model_name.split('/')[-1]}"
+        )
+
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir, exist_ok=True)
     if args.modify_meta_data:
