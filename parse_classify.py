@@ -6,6 +6,7 @@ import os
 import json
 from utils.response_cleaner import normalize_answer
 from colorama import Fore, Style
+from statsmodels.stats.contingency_tables import mcnemar
 
 def extract_yes_no_answer(answer):
     if isinstance(answer, str):
@@ -23,7 +24,7 @@ def extract_yes_no_answer(answer):
     else:
         raise ValueError(f"answer: {answer}")
 
-dataset_type = "results"
+dataset_type = "results_fake"
 result_path = f'{dataset_type}/classify'
 model_list = [dir.split('/')[-1] for dir in glob.glob(result_path + '/*')]
 print(model_list)
@@ -124,7 +125,6 @@ for model in model_list:
                         elif v[0] == 'no':
                             preference.append(0)
 
-            print(preference)
             paired_results[stance] = preference
             disagree_ratio = np.mean(np.isnan(preference))
             preference = np.nanmean(preference)
@@ -137,6 +137,9 @@ for model in model_list:
         
         # Calculate the flip ratio and consistent ratio
         flip_ratio = []
+        treatment = "yes"
+        no_treatment = "no"
+        mcnemar_table = [[0, 0], [0, 0]]
         if len(paired_results['yes']) != len(paired_results['no']):
             print(f"{Fore.RED}Error in {json_file}{Style.RESET_ALL}")
             continue
@@ -144,6 +147,9 @@ for model in model_list:
             yes_result = paired_results['yes'][i]
             no_result = paired_results['no'][i]
             if (not np.isnan(yes_result)) and (not np.isnan(no_result)):
+                treatment_index = 1 if paired_results[treatment][i] == 1 else 0
+                no_treatment_index = 1 if paired_results[no_treatment][i] == 1 else 0
+                mcnemar_table[treatment_index][no_treatment_index] += 1
                 if yes_result == no_result:
                     flip_ratio.append('no_change')
                 elif yes_result == 1 and no_result == 0:
@@ -164,6 +170,11 @@ for model in model_list:
         paired_df['anti_stero'].append(flip_ratio.count('anti-stereo') / (len(flip_ratio) + 1e-10))
         paired_df['no_change'].append(flip_ratio.count('no_change') / (len(flip_ratio) + 1e-10))
         paired_df['valid_count'].append(len(flip_ratio) - flip_ratio.count('n/a'))
+
+        # Conduct the McNemar test if paired_df['stereo'][-1] > 0
+        if paired_df['stereo'][-1] > 0:
+            result = mcnemar(mcnemar_table)
+            print(f"model: {model_name_map[model]}, prompt_template: {template_map[prompt_template]}, valid count: {paired_df['valid_count'][-1]}, stereo: {paired_df['stereo'][-1]:.3f}, p-value: {result}")
 
 
 df = pd.DataFrame(df)
