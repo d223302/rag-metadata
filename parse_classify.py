@@ -163,13 +163,13 @@ for model in model_list:
         
         # print(flip_ratio)
 
-
+        valid_count = len(flip_ratio) - flip_ratio.count('n/a')
         paired_df['model'].append(model_name_map[model])
         paired_df['prompt_template'].append(template_map[prompt_template])
-        paired_df['stereo'].append(flip_ratio.count('stereo') / (len(flip_ratio) + 1e-10))
-        paired_df['anti_stero'].append(flip_ratio.count('anti-stereo') / (len(flip_ratio) + 1e-10))
-        paired_df['no_change'].append(flip_ratio.count('no_change') / (len(flip_ratio) + 1e-10))
-        paired_df['valid_count'].append(len(flip_ratio) - flip_ratio.count('n/a'))
+        paired_df['stereo'].append(flip_ratio.count('stereo') / (valid_count + 1e-10) )
+        paired_df['anti_stero'].append(flip_ratio.count('anti-stereo') / (valid_count + 1e-10))
+        paired_df['no_change'].append(flip_ratio.count('no_change') / (valid_count + 1e-10))
+        paired_df['valid_count'].append(valid_count)
 
         # Conduct the McNemar test if paired_df['stereo'][-1] > 0
         if paired_df['stereo'][-1] > 0:
