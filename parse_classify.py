@@ -78,7 +78,8 @@ template_map = {
 }
 
 for model in model_list:
-    for prompt_template in ['input_emphasize_url_cnn_naturalnews_url', 'input_emphasize_url_wiki_wordpress_url', 'input_url_cnn_naturalnews_url', 'input_url_wiki_wordpress_url', 'input_emphasize_src_cnn_naturalnews_src','input_emphasize_src_wiki_wordpress_src', "input_date", "input_date_today", 'input_rank', 'input_no_meta']:
+    # for prompt_template in ['input_emphasize_url_cnn_naturalnews_url', 'input_emphasize_url_wiki_wordpress_url', 'input_url_cnn_naturalnews_url', 'input_url_wiki_wordpress_url', 'input_emphasize_src_cnn_naturalnews_src','input_emphasize_src_wiki_wordpress_src', "input_date", "input_date_today", 'input_rank', 'input_no_meta']:
+    for prompt_template in ["input_date", "input_date_today"]:
         paired_results = {
             'yes': [],
             'no': [],
@@ -96,7 +97,7 @@ for model in model_list:
             try: 
                 data = json.load(open(json_file))
             except json.decoder.JSONDecodeError:
-                print(f"{Fore.RED}Error in {json_file}{Style.RESET_ALL}")
+                # print(f"{Fore.RED}Error in {json_file}{Style.RESET_ALL}")
                 continue
             json_prompt_template = data['args']['prompt_template']
             json_modify_meta_data = data['args']['modify_meta_data']
@@ -174,7 +175,9 @@ for model in model_list:
         # Conduct the McNemar test if paired_df['stereo'][-1] > 0
         if paired_df['stereo'][-1] > 0:
             result = mcnemar(mcnemar_table)
-            print(f"model: {model_name_map[model]}, prompt_template: {template_map[prompt_template]}, valid count: {paired_df['valid_count'][-1]}, stereo: {paired_df['stereo'][-1]:.3f}, p-value: {result}")
+            p_value = result.pvalue
+            if p_value < 0.05:
+                print(f"model: {model_name_map[model]}, prompt_template: {template_map[prompt_template]}, valid count: {paired_df['valid_count'][-1]}, stereo: {paired_df['stereo'][-1]:.3f}, p-value: {result}")
 
 
 df = pd.DataFrame(df)

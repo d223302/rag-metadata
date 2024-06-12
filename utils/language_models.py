@@ -448,6 +448,26 @@ class OpenAIModel(LM):
             return response
 
 
+    def full_generate_with_img(
+        self,
+        text_pre,
+        img_1,
+        text_middle,
+        img_2,
+        text_post,
+        img_type = 'png',
+        system_prompt = None,
+    ):
+        return self.generate_with_img(
+            text_pre = text_pre,
+            img_1 = img_1,
+            text_middle = text_middle,
+            img_2 = img_2,
+            text_post = text_post,
+            img_type = img_type,
+            system_prompt = system_prompt,
+        )
+
 safety_settings = [
     {
         "category": "HARM_CATEGORY_DANGEROUS",

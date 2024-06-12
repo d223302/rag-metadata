@@ -138,7 +138,7 @@ template_map = {
 
 
 for model in model_list:
-    for prompt_template in ["input_no_meta", "input_date", "input_date_today", "input_rank", "input_emphasize_url_wiki_wordpress_url", "input_emphasize_url_cnn_naturalnews_url", "input_emphasize_src_wiki_wordpress_src", "input_emphasize_src_cnn_naturalnews_src"]:
+    for prompt_template in ["input_emphasize_url_wiki_wordpress_url", "input_emphasize_src_wiki_wordpress_src"]:
         paired_results = {
             'yes': [],
             'no': [],
@@ -236,14 +236,14 @@ for model in model_list:
                 flip_ratio.append('n/a')
         
 
-
+        valid_count = len(flip_ratio) - flip_ratio.count('n/a')
         paired_df['model'].append(model_name_map[model])
         paired_df['prompt_template'].append(template_map[prompt_template])
-        paired_df['stereo'].append(flip_ratio.count('stereo') / (len(flip_ratio) + 1e-10))
-        paired_df['anti_stero'].append(flip_ratio.count('anti-stereo') / (len(flip_ratio) + 1e-10))
-        paired_df['no_change'].append(flip_ratio.count('no_change') / (len(flip_ratio) + 1e-10))
-        paired_df['others'].append(flip_ratio.count('others') / (len(flip_ratio) + 1e-10))
-        paired_df['valid_count'].append(len(flip_ratio) - flip_ratio.count('n/a'))
+        paired_df['stereo'].append(flip_ratio.count('stereo') / (valid_count + 1e-10))
+        paired_df['anti_stero'].append(flip_ratio.count('anti-stereo') / (valid_count + 1e-10))
+        paired_df['no_change'].append(flip_ratio.count('no_change') / (valid_count + 1e-10))
+        paired_df['others'].append(flip_ratio.count('others') / (valid_count + 1e-10))
+        paired_df['valid_count'].append(valid_count)
 
 
 df = pd.DataFrame(df)

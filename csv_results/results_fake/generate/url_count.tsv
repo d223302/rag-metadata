@@ -1,10 +1,11 @@
-	url_count	url_count	url_count	url_count	url_count	url_count	url_count	url_count	url_count	url_count	url_count	url_count	url_count	url_count
-prompt_template	Date	Date	Date Today	Date Today	Emph Src CNN/Nat	Emph Src CNN/Nat	Emph Src Wiki/WP	Emph Src Wiki/WP	Emph URL CNN/Nat	Emph URL CNN/Nat	Emph URL Wiki/WP	Emph URL Wiki/WP	Rank	Rank
-stance	no	yes	no	yes	no	yes	no	yes	no	yes	no	yes	no	yes
-model														
-Llama-2-13b	0.0	0.0	0.0	0.0	0.376	0.176	0.12	0.072	0.152	0.088	0.168	0.136	0.0	0.0
-Llama-2-7b	0.0	0.0	0.0	0.0	0.056	0.016	0.008	0.04	0.008	0.016	0.024	0.04	0.0	0.0
-Llama-3-70B	0.0	0.0	0.0	0.0					0.008	0.016	0.024	0.024		
-Llama-3-8B	0.0	0.0	0.0	0.0	0.832	0.776	0.344	0.248	0.128	0.16	0.312	0.192	0.0	0.0
-gpt-4-turbo	0.0	0.0	0.0	0.008			0.696	0.6			0.32	0.232	0.0	0.008
-tulu-7b	0.0	0.0	0.0	0.0	0.656	0.624	0.12	0.176	0.128	0.08	0.28	0.136	0.0	0.0
+	url_count	url_count	url_count	url_count
+prompt_template	Emph Src Wiki/WP	Emph Src Wiki/WP	Emph URL Wiki/WP	Emph URL Wiki/WP
+stance	no	yes	no	yes
+model				
+Llama-2-13b	0.12	0.072	0.168	0.136
+Llama-2-7b	0.008	0.04	0.024	0.04
+Llama-3-70B			0.024	0.024
+Llama-3-8B	0.344	0.248	0.312	0.192
+claude-haiku		0.008		
+gpt-4-turbo	0.696	0.6	0.32	0.232
+tulu-7b	0.12	0.176	0.28	0.136
