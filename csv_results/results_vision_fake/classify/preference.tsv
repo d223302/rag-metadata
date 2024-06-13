@@ -2,5 +2,5 @@
 prompt_template	PNG	PNG
 counterfactual	yes_pretty_no_simple	yes_simple_no_pretty
 model		
-claude-haiku	0.9911504424778761	0.009708737864077669
-claude-sonnet	0.12359550561797752	0.0
+claude-haiku	0.8355263157894737	0.15865384615384615
+claude-sonnet	0.449438202247191	0.2608695652173913

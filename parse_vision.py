@@ -62,7 +62,7 @@ def extract_yes_no_answer(answer):
     else:
         return 'n/a'
 
-result_path = 'results_vision_fake/credible_short_answer'
+result_path = 'results_vision_fake/generate_short_answer'
 if "generate" in result_path:
     generation = True
 else:
@@ -115,10 +115,10 @@ template_map = {
 for model in model_list:
     for prompt_template in ['vision_prompts', 'vision_prompts_with_text']:
         paired_results = {
-            'yes_pretty_no_pretty': [],
+            # 'yes_pretty_no_pretty': [],
             'yes_pretty_no_simple': [],
             'yes_simple_no_pretty': [],
-            'yes_simple_no_simple': [],
+            # 'yes_simple_no_simple': [],
         }
         for counterfactual in paired_results.keys():
             json_file = os.path.join(
@@ -207,7 +207,8 @@ for model in model_list:
 
         # Perform McNemar test
         result = mcnemar(mcnemar_table)
-        print(f"Model: {model_name_map[model]}, prompt_template: {template_map[prompt_template]}, p-value: {result.pvalue}")
+        if result.pvalue < 0.05:
+            print(f"Model: {model_name_map[model]}, prompt_template: {template_map[prompt_template]}, p-value: {result.pvalue}")
 
 df = pd.DataFrame(df)
 # Format the dataframe. The row is model. The column should be grouped by the prompt template and counterfactual. Each cell is the preference
