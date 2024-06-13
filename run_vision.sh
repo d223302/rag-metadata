@@ -18,10 +18,10 @@
 #  done
 
 
-for model in "claude-3-opus-20240229"; do
+for model in "gpt-4o"; do
     for yes_html_template in "pretty" "simple"; do
         for no_html_template in "pretty" "simple"; do
-            for prompt_template in "vision_prompts_with_text"; do
+            for prompt_template in "vision_prompts"; do
                 if [ "$yes_html_template" == "$no_html_template" ]; then
                     continue
                 fi
