@@ -272,6 +272,10 @@ def main(args):
                     indent=4
                 )
         
+        # The following is for faster inference since contradictingQA is too large
+        if i > 140:
+            break
+        
     # Summarize the cost
     llm.summarize_cost()
     llm.save_cache()
