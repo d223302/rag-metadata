@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 source ~/.bashrc
-# conda activate vllm
-conda activate unsloth_env
+conda activate vllm
+# conda activate unsloth_env
 
 ### The following are for ConflictingQA
 ###
@@ -26,7 +26,7 @@ conda activate unsloth_env
 #  #  
 #  #  
 #  #  
-for model in "allenai/tulu-2-dpo-7b"; do
+for model in "meta-llama/Meta-Llama-3-70B-Instruct"; do
     for url_modifier in "wiki_wordpress_src"; do
       for prompt_template in "input_emphasize_src"; do
         for modify_meta_data in 1; do
@@ -48,7 +48,7 @@ for model in "allenai/tulu-2-dpo-7b"; do
 done
 #   
 #   
-for model in "allenai/tulu-2-dpo-7b"; do
+for model in "meta-llama/Meta-Llama-3-70B-Instruct"; do
     for url_modifier in "wiki_wordpress_url"; do
       for prompt_template in "input_emphasize_url"; do
         for modify_meta_data in 1; do
