@@ -1,11 +1,11 @@
 	disagree_ratio	disagree_ratio	disagree_ratio	disagree_ratio
-prompt_template	Emph Src Wiki/WP	Emph Src Wiki/WP	Emph URL Wiki/WP	Emph URL Wiki/WP
+prompt_template	Date	Date	Date Today	Date Today
 stance	no	yes	no	yes
 model				
-Llama-2-13b	0.224	0.208	0.192	0.176
-Llama-2-7b	0.424	0.368	0.232	0.232
-Llama-3-70B			0.472	0.376
-Llama-3-8B	0.424	0.368	0.472	0.44
-claude-haiku		0.312		
-gpt-4-turbo	0.224	0.264	0.24	0.168
-tulu-7b	0.288	0.368	0.44	0.408
+Llama-2-13b	0.208	0.184	0.2	0.344
+Llama-2-7b	0.24	0.24	0.192	0.288
+Llama-3-70B	0.36	0.4	0.208	0.384
+Llama-3-8B	0.464	0.432	0.424	0.432
+claude-haiku	0.392	0.36	0.272	0.488
+gpt-4-turbo	0.152	0.376	0.184	0.28
+tulu-7b	0.464	0.48	0.408	0.496

@@ -138,7 +138,7 @@ template_map = {
 
 
 for model in model_list:
-    for prompt_template in ["input_emphasize_url_wiki_wordpress_url", "input_emphasize_src_wiki_wordpress_src"]:
+    for prompt_template in ["input_date", "input_date_today"]:
         paired_results = {
             'yes': [],
             'no': [],
