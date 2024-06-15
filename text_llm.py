@@ -273,7 +273,14 @@ def main(args):
                 )
         
         # The following is for faster inference since contradictingQA is too large
+
         if i > 140:
+            with open(output_file, "w") as f:
+                json.dump(
+                    {"args": vars(args), "data": results},
+                    f, 
+                    indent=4
+                )
             break
         
     # Summarize the cost
