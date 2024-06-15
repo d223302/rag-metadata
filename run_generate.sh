@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 source ~/.bashrc
-# conda activate vllm
-conda activate unsloth_env
+conda activate vllm
+# conda activate unsloth_env
 
 ### The following are for ConflictingQA
 ###
@@ -106,29 +106,29 @@ conda activate unsloth_env
 ###
 
 
-for model in "meta-llama/Llama-2-13b-chat-hf"; do
-    for prompt_template in "input_date_today" "input_date"; do
-        for modify_meta_data in 1; do
-                for favored_stance in "yes" "no"; do
-                    python3 text_llm.py \
-                        --generation \
-                        --model_name "$model" \
-                        --prompt_template "$prompt_template" \
-                        --favored_stance "$favored_stance" \
-                        --modify_meta_data "$modify_meta_data" \
-                        --max_tokens 512 \
-                        --dataset_path data/fake_knowledge_with_evidence_parsed.json \
-                        --output_dir results_fake
+#  for model in "meta-llama/Llama-2-13b-chat-hf"; do
+#      for prompt_template in "input_date_today" "input_date"; do
+#          for modify_meta_data in 1; do
+#                  for favored_stance in "yes" "no"; do
+#                      python3 text_llm.py \
+#                          --generation \
+#                          --model_name "$model" \
+#                          --prompt_template "$prompt_template" \
+#                          --favored_stance "$favored_stance" \
+#                          --modify_meta_data "$modify_meta_data" \
+#                          --max_tokens 512 \
+#                          --dataset_path data/fake_knowledge_with_evidence_parsed.json \
+#                          --output_dir results_fake
+#  
+#                  done
+#          done
+#      done
+#  done
 
-                done
-        done
-    done
-done
 
 
-
-for model in "meta-llama/Llama-2-13b-chat-hf"; do
-    for url_modifier in "wiki_wordpress_url"; do
+for model in "claude-3-sonnet-20240229"; do
+    for url_modifier in "cnn_naturalnews_url"; do
       for prompt_template in "input_emphasize_url"; do
         for modify_meta_data in 1; do
                 for favored_stance in "yes" "no"; do
@@ -150,27 +150,27 @@ for model in "meta-llama/Llama-2-13b-chat-hf"; do
 done
 
 
-#  for model in "meta-llama/Llama-2-13b-chat-hf"; do
-#      for url_modifier in "wiki_wordpress_src"; do
-#        for prompt_template in "input_emphasize_src"; do
-#          for modify_meta_data in 1; do
-#                  for favored_stance in "yes" "no"; do
-#                      python3 text_llm.py \
-#                          --generation \
-#                          --max_tokens 512 \
-#                          --url_modifier "$url_modifier" \
-#                          --model_name "$model" \
-#                          --prompt_template "$prompt_template" \
-#                          --favored_stance "$favored_stance" \
-#                          --modify_meta_data "$modify_meta_data" \
-#                          --dataset_path data/fake_knowledge_with_evidence_parsed.json \
-#                          --output_dir results_fake
-#  
-#                  done
-#          done
-#        done
-#      done
-#  done
+for model in "claude-3-sonnet-20240229"; do
+    for url_modifier in "cnn_naturalnews_src"; do
+      for prompt_template in "input_emphasize_src"; do
+        for modify_meta_data in 1; do
+                for favored_stance in "yes" "no"; do
+                    python3 text_llm.py \
+                        --generation \
+                        --max_tokens 512 \
+                        --url_modifier "$url_modifier" \
+                        --model_name "$model" \
+                        --prompt_template "$prompt_template" \
+                        --favored_stance "$favored_stance" \
+                        --modify_meta_data "$modify_meta_data" \
+                        --dataset_path data/fake_knowledge_with_evidence_parsed.json \
+                        --output_dir results_fake
+
+                done
+        done
+      done
+    done
+done
 
 
 ### The following are for ConflictingQA-Fake credibility evaluation

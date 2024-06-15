@@ -102,11 +102,25 @@ def get_verdict(v, output_mode):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate latex table')
     parser.add_argument('--dataset_type', type=str, default='results_fake', help='dataset type')
+    parser.add_argument('--mode', choices = ['date', 'src_wiki', 'src_cnn', 'vision'])
     parser.add_argument('--vision', action = "store_true")
     parser.add_argument('--result_root', type=str, default='./results_fake', help='result path')
     args = parser.parse_args()
     if args.vision:
         prompt_templates = ['vision_prompts', 'vision_prompts_with_text']
+    else:
+        if args.mode == 'date':
+            prompt_templates = ['input_date', 'input_date_today']
+        elif 'src' in args.mode:
+            if 'wiki' in args.mode:
+                prompt_templates = ['input_emphasize_url_wiki_wordpress_url', 'input_emphasize_src_wiki_wordpress_src']
+            elif 'cnn' in args.mode:
+                prompt_templates = ['input_emphasize_url_cnn_naturalnews_url', 'input_emphasize_src_cnn_naturalnews_src']
+            else:
+                raise NotImplementedError
+        else:
+            raise NotImplementedError
+    
     df = {
         'model': [],
         'prompt_template': [],
@@ -140,9 +154,7 @@ if __name__ == '__main__':
     # model_list = ["Meta-Llama-3-70B-Instruct"]
     for output_mode in ['classify', 'generate_short_answer']:
         for model in model_list:
-            # for  prompt_template in prompt_templates:
-            for prompt_template in ['input_date', 'input_date_today']:
-            # for prompt_template in ['input_emphasize_url_wiki_wordpress_url', 'input_emphasize_src_wiki_wordpress_src']:
+            for  prompt_template in prompt_templates:
                 if args.vision:
                     paired_results = {
                         'yes_pretty_no_simple': [],
@@ -323,6 +335,11 @@ combined_new = combined_new.pivot_table(
     values = 'value',
 )
 combined_new = combined_new.reindex([model_name_map[model] for model in model_list])
+combined_new = combined_new.reindex(
+    ['yes_simple_no_pretty', 'yes_pretty_no_simple', 'z'] if args.vision else ['no', 'yes', 'z'],
+    level = 'stance',
+    axis = 1,
+)
 latex_table = combined_new.to_latex(index = True, float_format=lambda x: "{:.1f}".format(x * 100))
 print(combined_new)
 print(latex_table)
