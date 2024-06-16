@@ -8,21 +8,21 @@ conda activate unsloth_env
 ###
 ###
 
-# for model in "meta-llama/Meta-Llama-3-70B-Instruct"; do
-#     for prompt_template in "input_date_today" ; do
-#         for modify_meta_data in 1; do
-#                 for favored_stance in "yes" "no"; do
-#                     python3 text_llm.py \
-#                         --model_name "$model" \
-#                         --prompt_template "$prompt_template" \
-#                         --favored_stance "$favored_stance" \
-#                         --modify_meta_data "$modify_meta_data" \
-#                         --max_tokens 512 \
-#                         --generation
-#                 done
-#         done
-#     done
-# done
+for model in "meta-llama/Llama-2-13b-chat-hf"; do
+    for prompt_template in "input_date_today" ; do
+        for modify_meta_data in 1; do
+                for favored_stance in "yes" "no"; do
+                    python3 text_llm.py \
+                        --model_name "$model" \
+                        --prompt_template "$prompt_template" \
+                        --favored_stance "$favored_stance" \
+                        --modify_meta_data "$modify_meta_data" \
+                        --max_tokens 512 \
+                        --generation
+                done
+        done
+    done
+done
 #  #  
 #  #  
 #  #  
@@ -48,26 +48,26 @@ conda activate unsloth_env
 #  done
 #   
 #   
-for model in "meta-llama/Llama-2-7b-chat-hf"; do
-    for url_modifier in "wiki_wordpress_url"; do
-      for prompt_template in "input_emphasize_url"; do
-        for modify_meta_data in 1; do
-                for favored_stance in "yes" "no"; do
-                    python3 text_llm.py \
-                        --generation \
-                         --max_tokens 512 \
-                         --dataset_path data_with_keyword.json \
-                        --url_modifier "$url_modifier" \
-                        --model_name "$model" \
-                        --prompt_template "$prompt_template" \
-                        --favored_stance "$favored_stance" \
-                        --modify_meta_data "$modify_meta_data"
-
-                done
-        done
-      done
-    done
-done
+#  for model in "meta-llama/Llama-2-7b-chat-hf"; do
+#      for url_modifier in "wiki_wordpress_url"; do
+#        for prompt_template in "input_emphasize_url"; do
+#          for modify_meta_data in 1; do
+#                  for favored_stance in "yes" "no"; do
+#                      python3 text_llm.py \
+#                          --generation \
+#                           --max_tokens 512 \
+#                           --dataset_path data_with_keyword.json \
+#                          --url_modifier "$url_modifier" \
+#                          --model_name "$model" \
+#                          --prompt_template "$prompt_template" \
+#                          --favored_stance "$favored_stance" \
+#                          --modify_meta_data "$modify_meta_data"
+#  
+#                  done
+#          done
+#        done
+#      done
+#  done
 
 
 ### The following are for ConflictingQA-Fake
