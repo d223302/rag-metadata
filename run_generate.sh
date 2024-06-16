@@ -26,7 +26,7 @@ conda activate vllm
 #  #  
 #  #  
 #  #  
-for model in "meta-llama/Meta-Llama-3-70B-Instruct"; do
+for model in "meta-llama/Llama-2-13b-chat-hf"; do
     for url_modifier in "wiki_wordpress_src"; do
       for prompt_template in "input_emphasize_src"; do
         for modify_meta_data in 1; do
@@ -48,7 +48,7 @@ for model in "meta-llama/Meta-Llama-3-70B-Instruct"; do
 done
 #   
 #   
-for model in "meta-llama/Meta-Llama-3-70B-Instruct"; do
+for model in "meta-llama/Llama-2-13b-chat-hf"; do
     for url_modifier in "wiki_wordpress_url"; do
       for prompt_template in "input_emphasize_url"; do
         for modify_meta_data in 1; do
