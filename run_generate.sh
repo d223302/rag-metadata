@@ -9,7 +9,7 @@ conda activate unsloth_env
 ###
 
 for model in "meta-llama/Llama-2-13b-chat-hf"; do
-    for prompt_template in "input_date_today" ; do
+    for prompt_template in "input_date" ; do
         for modify_meta_data in 1; do
                 for favored_stance in "yes" "no"; do
                     python3 text_llm.py \
