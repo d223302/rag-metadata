@@ -27,17 +27,17 @@ model_name_map = {
 }
 
 template_map = {
-    'input_date': 'no-today',
-    'input_date_today': 'today',
+    'input_date': 'A. no-today',
+    'input_date_today': 'B. today',
     'input_rank': 'Rank',
-    'input_emphasize_url_cnn_naturalnews_url': 'Emph URL CNN/Nat',
-    'input_emphasize_url_wiki_wordpress_url': 'Emph URL Wiki/WP',
-    'input_url_cnn_naturalnews_url': 'URL CNN/Nat',
-    'input_url_wiki_wordpress_url': 'URL Wiki/WP',
-    'input_emphasize_src_cnn_naturalnews_src': 'Emph Src CNN/Nat',
-    'input_emphasize_src_wiki_wordpress_src': 'Emph Src Wiki/WP',
-    'vision_prompts': 'Screenshot',
-    'vision_prompts_with_text': 'Screenshot + Text',
+    'input_emphasize_url_cnn_naturalnews_url': 'A. Emph URL CNN/Nat',
+    'input_emphasize_url_wiki_wordpress_url': 'A. Emph URL Wiki/WP',
+    'input_url_cnn_naturalnews_url': 'A. URL CNN/Nat',
+    'input_url_wiki_wordpress_url': 'A. URL Wiki/WP',
+    'input_emphasize_src_cnn_naturalnews_src': 'B. Emph Src CNN/Nat',
+    'input_emphasize_src_wiki_wordpress_src': 'B. Emph Src Wiki/WP',
+    'vision_prompts': 'A. Screenshot',
+    'vision_prompts_with_text': 'B. Screenshot + Text',
 }
 
 
@@ -340,6 +340,7 @@ combined_new = combined_new.reindex(
     level = 'stance',
     axis = 1,
 )
+
 latex_table = combined_new.to_latex(index = True, float_format=lambda x: "{:.1f}".format(x * 100))
 print(combined_new)
 print(latex_table)
@@ -351,5 +352,6 @@ pivoted_pair = paired_df.pivot_table(
     columns = ['response_type', 'prompt_template'],
     values = 'p_value',
 )
+
 pivoted_pair = pivoted_pair.reindex([model_name_map[model] for model in model_list])
 print(pivoted_pair)

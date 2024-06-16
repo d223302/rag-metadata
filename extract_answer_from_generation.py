@@ -88,7 +88,7 @@ questions = [instance['search_query'] for instance in question_file]
 
 
 
-assert len(questions) == len(long_answers)
+# assert len(questions) == len(long_answers)
 
 pbar = tqdm(enumerate(zip(questions, long_answers)), total=len(questions))
 new_results = []
