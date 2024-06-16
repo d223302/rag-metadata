@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 source ~/.bashrc
-conda activate vllm
-# conda activate unsloth_env
+# conda activate vllm
+conda activate unsloth_env
 
 ### The following are for ConflictingQA
 ###
@@ -46,56 +46,9 @@ conda activate vllm
 #        done
 #      done
 #  done
-<<<<<<< HEAD
 #   
 #   
-#  for model in "meta-llama/Meta-Llama-3-70B-Instruct"; do
-#      for url_modifier in "wiki_wordpress_url"; do
-#        for prompt_template in "input_emphasize_url"; do
-#          for modify_meta_data in 1; do
-#                  for favored_stance in "yes" "no"; do
-#                      python3 text_llm.py \
-#                          --generation \
-#                           --max_tokens 512 \
-#                           --dataset_path data_with_keyword.json \
-#                          --url_modifier "$url_modifier" \
-#                          --model_name "$model" \
-#                          --prompt_template "$prompt_template" \
-#                          --favored_stance "$favored_stance" \
-#                          --modify_meta_data "$modify_meta_data"
-#  
-#                  done
-#          done
-#        done
-#      done
-#  done
-=======
-#  #  
-#  #  
-#  #  
-for model in "meta-llama/Llama-2-13b-chat-hf"; do
-    for url_modifier in "wiki_wordpress_src"; do
-      for prompt_template in "input_emphasize_src"; do
-        for modify_meta_data in 1; do
-                for favored_stance in "yes" "no"; do
-                    python3 text_llm.py \
-                        --generation \
-                        --dataset_path data_with_keyword.json \
-                        --max_tokens 512 \
-                        --url_modifier "$url_modifier" \
-                        --model_name "$model" \
-                        --prompt_template "$prompt_template" \
-                        --favored_stance "$favored_stance" \
-                        --modify_meta_data "$modify_meta_data"
-
-                done
-        done
-      done
-    done
-done
-#   
-#   
-for model in "meta-llama/Llama-2-13b-chat-hf"; do
+for model in "meta-llama/Llama-2-7b-chat-hf"; do
     for url_modifier in "wiki_wordpress_url"; do
       for prompt_template in "input_emphasize_url"; do
         for modify_meta_data in 1; do
@@ -115,7 +68,6 @@ for model in "meta-llama/Llama-2-13b-chat-hf"; do
       done
     done
 done
->>>>>>> 141f8e2252222aaa4c7f7c840d8ee9b741ef8810
 
 
 ### The following are for ConflictingQA-Fake
