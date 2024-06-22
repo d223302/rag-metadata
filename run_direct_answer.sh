@@ -16,37 +16,9 @@
 
 # input_no_meta" "input_date" "input_date_today" "input_url" "input_rank" "input_emphasize_url" "input_emphasize_wiki_url"
 
-#  for model in "gpt-4-turbo-2024-04-09"; do
-#      for url_modifier in "wiki_wordpress_src"; do
-#        for prompt_template in "input_emphasize_src"; do
-#          for modify_meta_data in 1; do
-#              if [[ $modify_meta_data == 1 ]]; then
-#                  for favored_stance in "yes" "no"; do
-#                      python3 text_llm.py \
-#                          --dataset_path data_with_keyword.json \
-#                          --url_modifier "$url_modifier" \
-#                          --model_name "$model" \
-#                          --prompt_template "$prompt_template" \
-#                          --favored_stance "$favored_stance" \
-#                          --modify_meta_data "$modify_meta_data"
-#  
-#                  done
-#              else
-#                  python3 text_llm.py \
-#                      --dataset_path data_with_keyword.json \
-#                      --url_modifier "$url_modifier" \
-#                      --model_name "$model" \
-#                      --prompt_template "$prompt_template" \
-#                      --modify_meta_data "$modify_meta_data"
-#              fi
-#          done
-#        done
-#      done
-#  done
-
-for model in "meta-llama/Meta-Llama-3-70B-Instruct"; do
-    for url_modifier in "wiki_wordpress_url"; do
-      for prompt_template in "input_emphasize_url"; do
+for model in "gpt-4-turbo-2024-04-09"; do
+    for url_modifier in "wiki_wordpress_src"; do
+      for prompt_template in "input_emphasize_src"; do
         for modify_meta_data in 1; do
             if [[ $modify_meta_data == 1 ]]; then
                 for favored_stance in "yes" "no"; do
@@ -71,6 +43,34 @@ for model in "meta-llama/Meta-Llama-3-70B-Instruct"; do
       done
     done
 done
+
+# for model in "meta-llama/Meta-Llama-3-70B-Instruct"; do
+#     for url_modifier in "wiki_wordpress_url"; do
+#       for prompt_template in "input_emphasize_url"; do
+#         for modify_meta_data in 1; do
+#             if [[ $modify_meta_data == 1 ]]; then
+#                 for favored_stance in "yes" "no"; do
+#                     python3 text_llm.py \
+#                         --dataset_path data_with_keyword.json \
+#                         --url_modifier "$url_modifier" \
+#                         --model_name "$model" \
+#                         --prompt_template "$prompt_template" \
+#                         --favored_stance "$favored_stance" \
+#                         --modify_meta_data "$modify_meta_data"
+# 
+#                 done
+#             else
+#                 python3 text_llm.py \
+#                     --dataset_path data_with_keyword.json \
+#                     --url_modifier "$url_modifier" \
+#                     --model_name "$model" \
+#                     --prompt_template "$prompt_template" \
+#                     --modify_meta_data "$modify_meta_data"
+#             fi
+#         done
+#       done
+#     done
+# done
 
 
 # for model in "meta-llama/Meta-Llama-3-70B-Instruct"; do

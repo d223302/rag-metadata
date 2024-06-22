@@ -235,8 +235,8 @@ if __name__ == '__main__':
                 
 
                 flip_ratio = []
-                treatment = list(paired_results.keys())[0]
-                no_treatment = list(paired_results.keys())[1]
+                treatment = list(paired_results.keys())[1]
+                no_treatment = list(paired_results.keys())[0]
                 mcnemar_table = [[0, 0], [0, 0]]
 
                 if len(paired_results[treatment]) != len(paired_results[no_treatment]):
@@ -260,9 +260,10 @@ if __name__ == '__main__':
                     else:
                         temp_counter['others'] += 1
 
-                    treatment_index = 0 if paired_results[treatment][i] == 1 else 1
-                    no_treatment_index = 0 if paired_results[no_treatment][i] == 1 else 1
-                    mcnemar_table[treatment_index][no_treatment_index] += 1
+                    # Treatment favors no (y_q = 0 if answer is no)
+                    treatment_outcome = 0 if paired_results[treatment][i] == 0 else 1
+                    no_treatment_outcome = 0 if paired_results[no_treatment][i] == 0 else 1
+                    mcnemar_table[treatment_outcome][no_treatment_outcome] += 1
                     
                 # Calculate the p-value
                 p_value = mcnemar(mcnemar_table, exact=True).pvalue

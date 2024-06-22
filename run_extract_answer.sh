@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # "input_date" "input_date_today" "input_emphasize_url_wiki_wordpress_url"  "input_emphasize_url_cnn_naturalnews_url";
-for model in "claude-3-sonnet-20240229"; do
-    for prompt_template in "input_emphasize_url_wiki_wordpress_url" "input_emphasize_src_wiki_wordpress_src"; do
+for model in "Meta-Llama-3-70B-Instruct"; do
+    for prompt_template in "input_emphasize_src_cnn_naturalnews_src" ; do
         for favored_stance in "yes" "no"; do
             python3 extract_answer_from_generation.py \
                 --answer_file results_fake/generate/"$model"/"$prompt_template"_"$favored_stance".json
