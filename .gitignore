@@ -7,6 +7,7 @@ data.pkl
 trl
 /dpo_output
 /dpo_13b_output
+/csv_results
 /.cache/
 /evaluation/
 /data/fake_knowledge_test_filtered.json

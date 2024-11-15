@@ -1,6 +1,0 @@
-	preference	preference
-prompt_template	PNG	PNG
-counterfactual	yes_pretty_no_simple	yes_simple_no_pretty
-model		
-claude-haiku	0.8355263157894737	0.15865384615384615
-claude-sonnet	0.449438202247191	0.2608695652173913
