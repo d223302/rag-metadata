@@ -125,13 +125,24 @@ Running the code will also conduct the McNeymar's test.
 ## Citation
 If you use ConflictingQA-Fake or find this repo useful, please cite our paper by
 ```
-@misc{chiang2024do,
-      title={Do Metadata and Appearance of the Retrieved Webpages Affect LLM's Reasoning in Retrieval-Augmented Generation?}, 
-      author={Cheng-Han Chiang and Hung-yi Lee},
-      year={2024},
-      eprint={},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL}
+@inproceedings{chiang-lee-2024-metadata,
+    title = "Do Metadata and Appearance of the Retrieved Webpages Affect {LLM}{'}s Reasoning in Retrieval-Augmented Generation?",
+    author = "Chiang, Cheng-Han  and
+      Lee, Hung-yi",
+    editor = "Belinkov, Yonatan  and
+      Kim, Najoung  and
+      Jumelet, Jaap  and
+      Mohebbi, Hosein  and
+      Mueller, Aaron  and
+      Chen, Hanjie",
+    booktitle = "Proceedings of the 7th BlackboxNLP Workshop: Analyzing and Interpreting Neural Networks for NLP",
+    month = nov,
+    year = "2024",
+    address = "Miami, Florida, US",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2024.blackboxnlp-1.24",
+    pages = "389--406",
+    abstract = "Large language models (LLMs) answering questions with retrieval-augmented generation (RAG) can face conflicting evidence in the retrieved documents. While prior works study how textual features like perplexity and readability influence the persuasiveness of evidence, humans consider more than textual content when evaluating conflicting information on the web. In this paper, we focus on the following question: When two webpages contain conflicting information to answer a question, does non-textual information affect the LLM{'}s reasoning and answer? We consider three types of non-textual information: (1) the webpage{'}s publication time, (2) the source where the webpage is from, and (3) the appearance of the webpage. We give the LLM a Yes/No question and two conflicting webpages that support yes and no, respectively. We exchange the non-textual information in the two webpages to see if the LLMs tend to use the information from a newer, more reliable, and more visually appealing webpage. We find that changing the publication time of the webpage can change the answer for most LLMs, but changing the webpage{'}s source merely affects the LLM{'}s answer. We also reveal that the webpage{'}s appearance has a strong causal effect on Claude-3{'}s answers.The codes and datasets used in the paper are available at https://github.com/d223302/rag-metadata.",
 }
 ```
 
